@@ -3,10 +3,13 @@ import datetime
 import inspect
 import json
 import os
+import pytz
 import requests
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+DATE_1990 = "1990-01-01"  # 11110
+DATE_TODAY = datetime.date.today().strftime("%Y-%m-%d")
 last_call_time = None
 
 
@@ -38,6 +41,10 @@ def v_print(*args, **kwargs):
 
     # Print the prefix along with the original message
     print(prefix, *args, **kwargs)
+
+
+def epoch_days_to_date(days: int) -> datetime.date:
+    return datetime.datetime.fromtimestamp(days * 24 * 60 * 60, tz=UTC_TIMEZONE).date()
 
 
 def single_backtest(symph_id, start_date, end_date, max_retries=3):
@@ -104,10 +111,8 @@ def single_backtest(symph_id, start_date, end_date, max_retries=3):
 
 def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
     # Get today's date in YYYY-MM-DD format
-    today = datetime.date.today().strftime("%Y-%m-%d")
-
     # Define the file and folder names based on the symphony_id and today's date
-    file_name = f"{symphony_id}-live_start_date-{today}.json"
+    file_name = f"{symphony_id}-live_start_date-{DATE_TODAY}.json"
     folder_name = "live_start_dates"
 
     # Ensure the folder exists
@@ -213,20 +218,29 @@ def download_multiple_backtests(symphony_ids, start_date, end_date, max_workers=
                 v_print(f"{symph_id} generated an exception: {exc}")
 
 
-# tests
-XOM_SYMPH_ID = "cv9jhez5EhhG00KHDlly"
-get_live_start_date(XOM_SYMPH_ID)
-single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
-single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
+def find_min_max_dates(sym_id):
+    full_curve = single_backtest(sym_id, DATE_1990, DATE_TODAY)
+    curve = dict(full_curve["dvm_capital"][sym_id].items())
+    min_date = list(curve.keys())[0]
+    max_date = list(curve.keys())[-1]
 
-DELISTED_SYMPH_ID = "Do36TWTu1gWh8SewO1Go"
-get_live_start_date(DELISTED_SYMPH_ID)
-single_backtest(DELISTED_SYMPH_ID, "1990-01-01", "2024-02-18")
-single_backtest(DELISTED_SYMPH_ID, "1990-01-01", "2024-02-18")
+    return min_date, max_date
+
+
+# # tests
+# XOM_SYMPH_ID = "cv9jhez5EhhG00KHDlly"
+# get_live_start_date(XOM_SYMPH_ID)
+# single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
+# single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
+
+# DELISTED_SYMPH_ID = "Do36TWTu1gWh8SewO1Go"
+# get_live_start_date(DELISTED_SYMPH_ID)
+# single_backtest(DELISTED_SYMPH_ID, "1990-01-01", "2024-02-18")
+# single_backtest(DELISTED_SYMPH_ID, "1990-01-01", "2024-02-18")
 
 
 # csv_file_path = "2024-01-28.csv"
 # symphony_ids = get_symphony_list(csv_file_path)
 # start_date = "1990-01-01"
-# end_date = datetime.date.today().strftime("%Y-%m-%d")
+# end_date = DATE_TODAY
 # download_multiple_backtests(symphony_ids, start_date, end_date, 10)
