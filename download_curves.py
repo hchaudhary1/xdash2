@@ -10,6 +10,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 DATE_1990 = "1990-01-01"  # 11110
 DATE_TODAY = datetime.date.today().strftime("%Y-%m-%d")
+DATE_TWO_WEEKS_AGO = (datetime.date.today() - datetime.timedelta(weeks=2)).strftime(
+    "%Y-%m-%d"
+)
+XOM_SYMPH_ID = "cv9jhez5EhhG00KHDlly"
+DELISTED_SYMPH_ID = "Do36TWTu1gWh8SewO1Go"
 last_call_time = None
 
 
@@ -218,13 +223,67 @@ def download_multiple_backtests(symphony_ids, start_date, end_date, max_workers=
                 v_print(f"{symph_id} generated an exception: {exc}")
 
 
-def find_min_max_dates(sym_id):
+def get_size_of_symphony(symphony_id):
+    v_print(f"get size: {symphony_id}")
+    today = DATE_TODAY
+
+    file_name = f"{symphony_id}-score-{today}.json"
+    folder_name = "symphony_scores"
+
+    # Ensure the folder exists
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+    # Construct the full file path
+    file_path = os.path.join(folder_name, file_name)
+
+    # Check if the file already exists
+    if os.path.exists(file_path):
+        v_print(f"Reading from existing file {file_name}")
+        with open(file_path, "r") as file:
+            data = file.read()
+            return len(data)
+
+    try:
+        url = (
+            "https://backtest-api.composer.trade/api/v1/public/symphonies/"
+            + symphony_id
+            + "/score?score_version=v2"
+        )
+
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.text
+
+        # Save the response to disk
+        with open(file_path, "w") as file:
+            file.write(data)
+            v_print(f"Saved response to {file_path}")
+
+        return len(data)
+    except requests.exceptions.RequestException as e:
+        v_print(f"Error getting size of symphony {symphony_id}: {e}")
+        return None
+    except Exception as e:
+        v_print(
+            f"An unexpected error occurred in get_size_of_symphony for symphony {symphony_id}: {e}"
+        )
+        return None
+
+
+def find_min_max_dates_int(sym_id):
     full_curve = single_backtest(sym_id, DATE_1990, DATE_TODAY)
     curve = dict(full_curve["dvm_capital"][sym_id].items())
     min_date = list(curve.keys())[0]
     max_date = list(curve.keys())[-1]
-
     return min_date, max_date
+
+
+def latest_market_day_int():
+    curve = single_backtest(XOM_SYMPH_ID, DATE_TWO_WEEKS_AGO, DATE_TODAY)
+    curve = dict(curve["dvm_capital"][XOM_SYMPH_ID].items())
+    last_market_day = list(curve.keys())[-1]
+    return last_market_day
 
 
 # # tests
