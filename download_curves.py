@@ -355,15 +355,16 @@ def before_live(df):
         start_date = pd.to_datetime(row["info_start_date"]).date()
         end_date = live_date
         json = single_backtest(row["id"], start_date, end_date)
-        results["calmar_before_live_13_months_beyond"] = json["stats"].get(
-            "calmar_ratio", 500
-        )
+        results["calmar_before_live_max"] = json["stats"].get("calmar_ratio", 1000)
         for days, description in periods:
+            results[f"calmar_before_live_{description}"] = None
             start_date = live_date - datetime.timedelta(days=days)
+            if start_date <= row["info_start_date"]:
+                continue
             end_date = live_date
             json = single_backtest(row["id"], start_date, end_date)
             results[f"calmar_before_live_{description}"] = json["stats"].get(
-                "calmar_ratio", 500
+                "calmar_ratio", 1000
             )
 
         return results
@@ -372,8 +373,9 @@ def before_live(df):
         results = list(executor.map(process_row, df.to_dict("records")))
 
     for index, result in enumerate(results):
-        for description, value in result.items():
-            df.at[index, description] = value
+        if result is not None:
+            for description, value in result.items():
+                df.at[index, description] = value
 
 
 def main():
@@ -381,6 +383,7 @@ def main():
     before_live(df)
 
     df.to_csv("output.csv", index=False)
+    print(df.tail(10))
     v_print("--- DONE ---")
 
 
