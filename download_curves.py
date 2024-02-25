@@ -277,20 +277,21 @@ def get_size_of_symphony(symphony_id):
 def latest_market_day_int():
     if not hasattr(latest_market_day_int, "last_market_day"):
         curve = single_backtest(XOM_SYMPH_ID, DATE_TWO_WEEKS_AGO, DATE_TODAY)
-        curve = dict(curve["dvm_capital"][XOM_SYMPH_ID].items())
+        curve = dict(sorted(curve["dvm_capital"][XOM_SYMPH_ID].items()))
         latest_market_day_int.last_market_day = list(curve.keys())[-1]
     return latest_market_day_int.last_market_day
 
 
 def find_min_date_int(sym_id):
     full_curve = single_backtest(sym_id, DATE_1990, DATE_TODAY)
-    curve = dict(full_curve["dvm_capital"][sym_id].items())
+    curve = dict(sorted(full_curve["dvm_capital"][sym_id].items()))
     min_date = list(curve.keys())[0]
     max_date = list(curve.keys())[-1]
     if latest_market_day_int() == max_date:
         return min_date
     else:
         # since max date is not valid -- we wont use this symph
+        v_print(f"Max Date: {max_date}, Latest Market Day: {latest_market_day_int()}")
         return None
 
 
@@ -331,6 +332,8 @@ def main():
     df = df.dropna(subset=["info_live_date"])
     df = df.dropna(subset=["info_start_date"])
     df.to_csv("output.csv", index=False)
+
+    v_print("--- DONE ---")
 
 
 if __name__ == "__main__":
