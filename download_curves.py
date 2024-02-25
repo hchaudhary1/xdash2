@@ -339,7 +339,6 @@ def get_symph_dates():
 
     df = df.dropna(subset=["info_live_date"])
     df = df.dropna(subset=["info_start_date"])
-    df.to_csv("output.csv", index=False)
     return df
 
 
@@ -356,12 +355,16 @@ def before_live(df):
         start_date = pd.to_datetime(row["info_start_date"]).date()
         end_date = live_date
         json = single_backtest(row["id"], start_date, end_date)
-        results["calmar_before_live_13_months_beyond"] = json["stats"]["calmar_ratio"]
+        results["calmar_before_live_13_months_beyond"] = json["stats"].get(
+            "calmar_ratio", 500
+        )
         for days, description in periods:
             start_date = live_date - datetime.timedelta(days=days)
             end_date = live_date
             json = single_backtest(row["id"], start_date, end_date)
-            results[f"calmar_before_live_{description}"] = json["stats"]["calmar_ratio"]
+            results[f"calmar_before_live_{description}"] = json["stats"].get(
+                "calmar_ratio", 500
+            )
 
         return results
 
@@ -377,6 +380,7 @@ def main():
     df = get_symph_dates()
     before_live(df)
 
+    df.to_csv("output.csv", index=False)
     v_print("--- DONE ---")
 
 
