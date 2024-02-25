@@ -55,7 +55,15 @@ def epoch_days_to_date(days: int) -> datetime.date:
 
 
 def single_backtest(symph_id, start_date, end_date, max_retries=3):
-    v_print("start")
+    if isinstance(start_date, str):
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    if isinstance(end_date, str):
+        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+    start_date = start_date.strftime("%Y-%m-%d")
+    end_date = end_date.strftime("%Y-%m-%d")
+
+    v_print(f"backtest: {symph_id}: {start_date}-to-{end_date}")
     file_name = f"2_{symph_id}-{start_date}-to-{end_date}.json"
     folder_name = "backtest_results"
 
@@ -288,7 +296,7 @@ def find_min_date_int(sym_id):
     min_date = list(curve.keys())[0]
     max_date = list(curve.keys())[-1]
     if latest_market_day_int() == max_date:
-        return int(min_date)
+        return int(min_date) + 1
     else:
         # since max date is not valid -- we wont use this symph
         v_print(f"Max Date: {max_date}, Latest Market Day: {latest_market_day_int()}")
@@ -335,11 +343,48 @@ def get_symph_dates():
     return df
 
 
+def before_live(df):
+    def process_row(row):
+        live_date = pd.to_datetime(row["info_live_date"]).date()
+        periods = [
+            (30, "01_month"),
+            (90, "03_months"),
+            (180, "06_months"),
+            (365, "12_months"),
+        ]
+        results = {}
+        start_date = pd.to_datetime(row["info_start_date"]).date()
+        end_date = live_date
+        json = single_backtest(row["id"], start_date, end_date)
+        results["calmar_before_live_13_months_beyond"] = json["stats"]["calmar_ratio"]
+        for days, description in periods:
+            start_date = live_date - datetime.timedelta(days=days)
+            end_date = live_date
+            json = single_backtest(row["id"], start_date, end_date)
+            results[f"calmar_before_live_{description}"] = json["stats"]["calmar_ratio"]
+
+        return results
+
+    with ThreadPoolExecutor() as executor:
+        results = list(executor.map(process_row, df.to_dict("records")))
+
+    for index, result in enumerate(results):
+        for description, value in result.items():
+            df.at[index, description] = value
+
+
 def main():
     df = get_symph_dates()
+    before_live(df)
 
     v_print("--- DONE ---")
 
+
+# before live
+# after live
+# before today
+
+# more than 12
 
 if __name__ == "__main__":
     main()
