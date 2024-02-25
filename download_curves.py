@@ -295,7 +295,7 @@ def find_min_date_int(sym_id):
         return None
 
 
-def main():
+def get_symph_dates():
     symphony_ids = get_symphony_list("2024-01-28.csv")
     df = pd.DataFrame(symphony_ids, columns=["id"])
     df = df.head(100)
@@ -332,6 +332,11 @@ def main():
     df = df.dropna(subset=["info_live_date"])
     df = df.dropna(subset=["info_start_date"])
     df.to_csv("output.csv", index=False)
+    return df
+
+
+def main():
+    df = get_symph_dates()
 
     v_print("--- DONE ---")
 
