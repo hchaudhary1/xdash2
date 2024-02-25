@@ -51,7 +51,7 @@ def v_print(*args, **kwargs):
 
 
 def epoch_days_to_date(days: int) -> datetime.date:
-    return datetime.datetime.fromtimestamp(days * 24 * 60 * 60, tz=UTC_TIMEZONE).date()
+    return datetime.datetime.fromtimestamp(days * 24 * 60 * 60, tz=pytz.UTC).date()
 
 
 def single_backtest(symph_id, start_date, end_date, max_retries=3):
@@ -288,7 +288,7 @@ def find_min_date_int(sym_id):
     min_date = list(curve.keys())[0]
     max_date = list(curve.keys())[-1]
     if latest_market_day_int() == max_date:
-        return min_date
+        return int(min_date)
     else:
         # since max date is not valid -- we wont use this symph
         v_print(f"Max Date: {max_date}, Latest Market Day: {latest_market_day_int()}")
@@ -316,7 +316,7 @@ def main():
 
         row_dict = row._asdict()
         row_dict["info_live_date"] = live_start_date
-        row_dict["info_start_date"] = min_date
+        row_dict["info_start_date"] = epoch_days_to_date(min_date)
         row_dict["info_size"] = get_size_of_symphony(symphony_id)
         return row_dict
 
@@ -338,25 +338,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# - get all INFO stats/dates on every id
-# - remove  not_running
-
-
-# # tests
-# XOM_SYMPH_ID = "cv9jhez5EhhG00KHDlly"
-# get_live_start_date(XOM_SYMPH_ID)
-# single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
-# single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
-
-# DELISTED_SYMPH_ID = "Do36TWTu1gWh8SewO1Go"
-# get_live_start_date(DELISTED_SYMPH_ID)
-# single_backtest(DELISTED_SYMPH_ID, "1990-01-01", "2024-02-18")
-# single_backtest(DELISTED_SYMPH_ID, "1990-01-01", "2024-02-18")
-
-
-# csv_file_path = "2024-01-28.csv"
-# symphony_ids = get_symphony_list(csv_file_path)
-# start_date = "1990-01-01"
-# end_date = DATE_TODAY
-# download_multiple_backtests(symphony_ids, start_date, end_date)
