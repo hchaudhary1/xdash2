@@ -219,9 +219,14 @@ get_live_start_date(XOM_SYMPH_ID)
 single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
 single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
 
+DELISTED_SYMPH_ID = "Do36TWTu1gWh8SewO1Go"
+get_live_start_date(DELISTED_SYMPH_ID)
+single_backtest(DELISTED_SYMPH_ID, "1990-01-01", "2024-02-18")
+single_backtest(DELISTED_SYMPH_ID, "1990-01-01", "2024-02-18")
 
-csv_file_path = "2024-01-28.csv"
-symphony_ids = get_symphony_list(csv_file_path)
-start_date = "1990-01-01"
-end_date = datetime.date.today().strftime("%Y-%m-%d")
-download_multiple_backtests(symphony_ids, start_date, end_date, 10)
+
+# csv_file_path = "2024-01-28.csv"
+# symphony_ids = get_symphony_list(csv_file_path)
+# start_date = "1990-01-01"
+# end_date = datetime.date.today().strftime("%Y-%m-%d")
+# download_multiple_backtests(symphony_ids, start_date, end_date, 10)
