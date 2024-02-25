@@ -3,10 +3,12 @@ import datetime
 import inspect
 import json
 import os
+import pandas as pd
 import pytz
 import requests
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
 
 DATE_1990 = "1990-01-01"  # 11110
 DATE_TODAY = datetime.date.today().strftime("%Y-%m-%d")
@@ -271,12 +273,12 @@ def get_size_of_symphony(symphony_id):
         return None
 
 
-def find_min_max_dates_int(sym_id):
+def find_min_date_int(sym_id):
     full_curve = single_backtest(sym_id, DATE_1990, DATE_TODAY)
     curve = dict(full_curve["dvm_capital"][sym_id].items())
     min_date = list(curve.keys())[0]
-    max_date = list(curve.keys())[-1]
-    return min_date, max_date
+    # max_date = list(curve.keys())[-1]
+    return min_date  # , max_date
 
 
 def latest_market_day_int():
@@ -284,6 +286,23 @@ def latest_market_day_int():
     curve = dict(curve["dvm_capital"][XOM_SYMPH_ID].items())
     last_market_day = list(curve.keys())[-1]
     return last_market_day
+
+
+def main():
+    symphony_ids = get_symphony_list("2024-01-28.csv")
+    df = pd.DataFrame(symphony_ids, columns=["id"])
+    df["info_size"] = df["id"].apply(get_size_of_symphony)
+    df["info_start_date"] = df["id"].apply(find_min_date_int)
+    df["info_live_date"] = df["id"].apply(get_live_start_date)
+
+
+if __name__ == "__main__":
+    main()
+
+# - create a master CSV by using get_symphony_list()
+# - remove private -- get the live date, if we get a 403, its private
+# - get all INFO stats/dates on every id
+# - remove  not_running
 
 
 # # tests
