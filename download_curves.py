@@ -346,16 +346,23 @@ def before_live(df):
     def process_row(row):
         live_date = pd.to_datetime(row["info_live_date"]).date()
         periods = [
-            (30, "01_month"),
-            (90, "03_months"),
-            (180, "06_months"),
-            (365, "12_months"),
+            (30, "01_mo"),
+            (90, "03_mo"),
+            (180, "06_mo"),
+            (365, "12_mo"),
+            (365, "12_mo"),
         ]
         results = {}
+        results[row["id"]] = row["id"]
         start_date = pd.to_datetime(row["info_start_date"]).date()
         end_date = live_date
-        json = single_backtest(row["id"], start_date, end_date)
-        results["calmar_before_live_max"] = json["stats"].get("calmar_ratio", 1000)
+        beyond_13mo_date = live_date - datetime.timedelta(days=395)
+        results["calmar_before_live_13mo_and_beyond"] = None
+        if beyond_13mo_date > start_date:
+            json = single_backtest(row["id"], start_date, end_date)
+            results["calmar_before_live_13mo_and_beyond"] = json["stats"].get(
+                "calmar_ratio", 1000
+            )
         for days, description in periods:
             results[f"calmar_before_live_{description}"] = None
             start_date = live_date - datetime.timedelta(days=days)
@@ -372,10 +379,12 @@ def before_live(df):
     with ThreadPoolExecutor() as executor:
         results = list(executor.map(process_row, df.to_dict("records")))
 
-    for index, result in enumerate(results):
+    for result in results:
         if result is not None:
+            symph_id = result.pop(list(result.keys())[0])
             for description, value in result.items():
-                df.at[index, description] = value
+                row_index = df.index[df["id"] == symph_id].tolist()[0]
+                df.at[row_index, description] = value
 
 
 def main():
