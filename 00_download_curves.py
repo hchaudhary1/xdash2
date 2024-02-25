@@ -1,9 +1,11 @@
+import csv
 import datetime
 import inspect
 import json
 import os
 import requests
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 last_call_time = None
 
@@ -182,7 +184,44 @@ def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
     return None
 
 
+def get_symphony_list(file_path):
+    """Reads the first column from a CSV file and returns a list of IDs."""
+    with open(file_path, newline="") as csvfile:
+        reader = csv.reader(csvfile)
+        return [row[0] for row in reader if row]  # Added check to skip empty rows
+
+
+def download_multiple_backtests(symphony_ids, start_date, end_date, max_workers=10):
+    """
+    Downloads backtest data using a ThreadPoolExecutor.
+    """
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Create a future to symphony_id mapping by submitting tasks directly using single_backtest
+        future_to_symph_id = {
+            executor.submit(single_backtest, symph_id, start_date, end_date): symph_id
+            for symph_id in symphony_ids
+        }
+
+        for future in as_completed(future_to_symph_id):
+            symph_id = future_to_symph_id[future]
+            try:
+                result = (
+                    future.result()
+                )  # No need to unpack a tuple, as we're directly getting the result
+                v_print(f"Completed backtest for {symph_id}")
+            except Exception as exc:
+                v_print(f"{symph_id} generated an exception: {exc}")
+
+
 # tests
-get_live_start_date("0bBsknsEveFj5INdknFS")
-single_backtest("0bBsknsEveFj5INdknFS", "1990-01-01", "2024-02-18")
-single_backtest("0bBsknsEveFj5INdknFS", "1990-01-01", "2024-02-18")
+XOM_SYMPH_ID = "cv9jhez5EhhG00KHDlly"
+get_live_start_date(XOM_SYMPH_ID)
+single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
+single_backtest(XOM_SYMPH_ID, "1990-01-01", "2024-02-18")
+
+
+csv_file_path = "2024-01-28.csv"
+symphony_ids = get_symphony_list(csv_file_path)
+start_date = "1990-01-01"
+end_date = datetime.date.today().strftime("%Y-%m-%d")
+download_multiple_backtests(symphony_ids, start_date, end_date, 10)
