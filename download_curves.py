@@ -274,19 +274,24 @@ def get_size_of_symphony(symphony_id):
         return None
 
 
+def latest_market_day_int():
+    if not hasattr(latest_market_day_int, "last_market_day"):
+        curve = single_backtest(XOM_SYMPH_ID, DATE_TWO_WEEKS_AGO, DATE_TODAY)
+        curve = dict(curve["dvm_capital"][XOM_SYMPH_ID].items())
+        latest_market_day_int.last_market_day = list(curve.keys())[-1]
+    return latest_market_day_int.last_market_day
+
+
 def find_min_date_int(sym_id):
     full_curve = single_backtest(sym_id, DATE_1990, DATE_TODAY)
     curve = dict(full_curve["dvm_capital"][sym_id].items())
     min_date = list(curve.keys())[0]
-    # max_date = list(curve.keys())[-1]
-    return min_date  # , max_date
-
-
-def latest_market_day_int():
-    curve = single_backtest(XOM_SYMPH_ID, DATE_TWO_WEEKS_AGO, DATE_TODAY)
-    curve = dict(curve["dvm_capital"][XOM_SYMPH_ID].items())
-    last_market_day = list(curve.keys())[-1]
-    return last_market_day
+    max_date = list(curve.keys())[-1]
+    if latest_market_day_int() == max_date:
+        return min_date
+    else:
+        # since max date is not valid -- we wont use this symph
+        return None
 
 
 def main():
@@ -304,10 +309,14 @@ def main():
         if live_start_date is None:
             return None
 
+        min_date = find_min_date_int(symphony_id)
+        if min_date is None:
+            return None
+
         row_dict = row._asdict()
         row_dict["info_live_date"] = live_start_date
+        row_dict["info_start_date"] = min_date
         row_dict["info_size"] = get_size_of_symphony(symphony_id)
-        row_dict["info_start_date"] = find_min_date_int(symphony_id)
         return row_dict
 
     with ThreadPoolExecutor() as executor:
@@ -320,6 +329,7 @@ def main():
                 df.at[index, "info_live_date"] = row["info_live_date"]
 
     df = df.dropna(subset=["info_live_date"])
+    df = df.dropna(subset=["info_start_date"])
     df.to_csv("output.csv", index=False)
 
 
