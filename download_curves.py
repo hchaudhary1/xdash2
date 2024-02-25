@@ -197,17 +197,18 @@ def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
 
 
 def get_symphony_list(file_path):
-    """Reads the first column from a CSV file and returns a list of IDs."""
+    """Reads the first column from a CSV file and returns a list of IDs, skipping the header."""
     with open(file_path, newline="") as csvfile:
         reader = csv.reader(csvfile)
+        next(reader)  # Skip the header row
         return [row[0] for row in reader if row]  # Added check to skip empty rows
 
 
-def download_multiple_backtests(symphony_ids, start_date, end_date, max_workers=10):
+def download_multiple_backtests(symphony_ids, start_date, end_date):
     """
     Downloads backtest data using a ThreadPoolExecutor.
     """
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    with ThreadPoolExecutor() as executor:
         # Create a future to symphony_id mapping by submitting tasks directly using single_backtest
         future_to_symph_id = {
             executor.submit(single_backtest, symph_id, start_date, end_date): symph_id
@@ -291,16 +292,40 @@ def latest_market_day_int():
 def main():
     symphony_ids = get_symphony_list("2024-01-28.csv")
     df = pd.DataFrame(symphony_ids, columns=["id"])
-    df["info_size"] = df["id"].apply(get_size_of_symphony)
-    df["info_start_date"] = df["id"].apply(find_min_date_int)
-    df["info_live_date"] = df["id"].apply(get_live_start_date)
+    df = df.head(100)
+
+    df["info_size"] = None
+    df["info_start_date"] = None
+    df["info_live_date"] = None
+
+    def process_row(row):
+        symphony_id = row.id
+        live_start_date = get_live_start_date(symphony_id)
+        if live_start_date is None:
+            return None
+
+        row_dict = row._asdict()
+        row_dict["info_live_date"] = live_start_date
+        row_dict["info_size"] = get_size_of_symphony(symphony_id)
+        row_dict["info_start_date"] = find_min_date_int(symphony_id)
+        return row_dict
+
+    with ThreadPoolExecutor() as executor:
+        for index, row in enumerate(
+            executor.map(process_row, df.itertuples(index=False))
+        ):
+            if row is not None:
+                df.at[index, "info_size"] = row["info_size"]
+                df.at[index, "info_start_date"] = row["info_start_date"]
+                df.at[index, "info_live_date"] = row["info_live_date"]
+
+    df = df.dropna(subset=["info_live_date"])
+    df.to_csv("output.csv", index=False)
 
 
 if __name__ == "__main__":
     main()
 
-# - create a master CSV by using get_symphony_list()
-# - remove private -- get the live date, if we get a 403, its private
 # - get all INFO stats/dates on every id
 # - remove  not_running
 
@@ -321,4 +346,4 @@ if __name__ == "__main__":
 # symphony_ids = get_symphony_list(csv_file_path)
 # start_date = "1990-01-01"
 # end_date = DATE_TODAY
-# download_multiple_backtests(symphony_ids, start_date, end_date, 10)
+# download_multiple_backtests(symphony_ids, start_date, end_date)
