@@ -342,68 +342,67 @@ def get_symph_dates():
     return df
 
 
-def before_live(df):
-    def process_row(row):
+def process_row(row):
 
-        # names
-        era_prefix = "BeforeLive"
-        era = [
-            (30, "01mo"),
-            (90, "03mo"),
-            (180, "06mo"),
-            (365, "12mo"),
-        ]
-        period_final = "13mo+"
-        stat_types = {
-            "GainTotalPct": ("cumulative_return", 0, 100),
-            "GainAnnualizedPct": ("annualized_rate_of_return", 0, 100),
-            "DrawdownMaxPct": ("max_drawdown", 0, 100),
-            "Calmar": ("calmar_ratio", 100000, 1),
-            "Sharpe": ("sharpe_ratio", 100, 1),
-            "DayBestPct": ("max", 0, 100),
-            "DayWorstPct": ("min", 0, 100),
-            "DayAvgPct": ("mean", 0, 100),
-            "DayStdDevPct": ("standard_deviation", 0, 6.2994078834871),
-        }
+    # names
+    era_prefix = "BeforeLive"
+    era = [
+        (30, "01mo"),
+        (90, "03mo"),
+        (180, "06mo"),
+        (365, "12mo"),
+    ]
+    period_final = "13moToMax"
+    stat_types = {
+        "GainTotalPct": ("cumulative_return", 0, 100),
+        "GainAnnualizedPct": ("annualized_rate_of_return", 0, 100),
+        "DrawdownMaxPct": ("max_drawdown", 0, 100),
+        "Calmar": ("calmar_ratio", 100000, 1),
+        "Sharpe": ("sharpe_ratio", 100, 1),
+        "DayBestPct": ("max", 0, 100),
+        "DayWorstPct": ("min", 0, 100),
+        "DayAvgPct": ("mean", 0, 100),
+        "DayStdDevPct": ("standard_deviation", 0, 6.2994078834871),
+    }
 
-        results = {}
-        results[row["id"]] = row["id"]
+    results = {}
+    results[row["id"]] = row["id"]
 
-        # dates
-        live_date = pd.to_datetime(row["info_live_date"]).date()
-        start_date = pd.to_datetime(row["info_start_date"]).date()
-        end_date = live_date
-        beyond_13mo_date = live_date - datetime.timedelta(days=395)
+    # dates
+    live_date = pd.to_datetime(row["info_live_date"]).date()
+    start_date = pd.to_datetime(row["info_start_date"]).date()
+    end_date = live_date
+    beyond_13mo_date = live_date - datetime.timedelta(days=395)
 
-        # Iterate through each stat type and get stats
-        for stat_name, stat_tuple in stat_types.items():
-            stat_json_name, default_value, multiplier = stat_tuple
-            # get stat for period_final first, as this is a max
-            results_key = f"{stat_name}_{era_prefix}_{period_final}"
+    # Iterate through each stat type and get stats
+    for stat_name, stat_tuple in stat_types.items():
+        stat_json_name, default_value, multiplier = stat_tuple
+        # get stat for period_final first, as this is a max
+        results_key = f"{stat_name}_{era_prefix}_{period_final}"
+        results[results_key] = None
+        if beyond_13mo_date > start_date:
+            json = single_backtest(row["id"], start_date, end_date)
+            results[results_key] = (
+                json["stats"].get(stat_json_name, default_value) * multiplier
+            )
+
+        # get stats for rest of the eras
+        for days, description in era:
+            results_key = f"{stat_name}_{era_prefix}_{description}"
             results[results_key] = None
-            if beyond_13mo_date > start_date:
-                json = single_backtest(row["id"], start_date, end_date)
-                results[results_key] = (
-                    json["stats"].get(stat_json_name, default_value) * multiplier
-                )
+            start_date_adjusted = live_date - datetime.timedelta(days=days)
+            if start_date_adjusted <= row["info_start_date"]:
+                continue
+            end_date_adjusted = live_date
+            json = single_backtest(row["id"], start_date_adjusted, end_date_adjusted)
+            results[results_key] = (
+                json["stats"].get(stat_json_name, default_value) * multiplier
+            )
 
-            # get stats for rest of the eras
-            for days, description in era:
-                results_key = f"{stat_name}_{era_prefix}_{description}"
-                results[results_key] = None
-                start_date_adjusted = live_date - datetime.timedelta(days=days)
-                if start_date_adjusted <= row["info_start_date"]:
-                    continue
-                end_date_adjusted = live_date
-                json = single_backtest(
-                    row["id"], start_date_adjusted, end_date_adjusted
-                )
-                results[results_key] = (
-                    json["stats"].get(stat_json_name, default_value) * multiplier
-                )
+    return results
 
-        return results
 
+def before_live(df):
     with ThreadPoolExecutor() as executor:
         results = list(executor.map(process_row, df.to_dict("records")))
 
