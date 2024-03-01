@@ -355,7 +355,7 @@ def before_live(df):
         period_final = "13mo_and_beyond"
         stat_types = {
             "calmar": ("calmar_ratio", 100000),
-            "sharpe": ("sharpe_ratio", 100000),
+            "sharpe": ("sharpe_ratio", 100),
         }
         era_prefix = "beforeLive"
 
