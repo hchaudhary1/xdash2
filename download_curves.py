@@ -342,10 +342,37 @@ def get_symph_dates():
     return df
 
 
-def process_row(row):
+def get_era_dates(isAfterLive, data_begin, live_date, delta_days, isBeyondDelta=False):
+    bt_start = None
+    bt_end = None
+    if isAfterLive:
+        era_date_mark = live_date + datetime.timedelta(days=delta_days)
+        # assumes algos are pre-filtered and running live today
+        if era_date_mark <= DATE_TODAY:
+            # max AFTER is valid
+            bt_start = live_date
+            bt_end = era_date_mark
+            if isBeyondDelta:
+                bt_end = DATE_TODAY
+    else:
+        era_date_mark = live_date - datetime.timedelta(days=delta_days)
+        if era_date_mark >= data_begin:
+            # max BEFORE is valid
+            bt_start = era_date_mark
+            bt_end = live_date
+            if isBeyondDelta:
+                bt_start = data_begin
+
+    return bt_start, bt_end
+
+
+def process_row(row, isAfter=False):
 
     # names
     era_prefix = "BeforeLive"
+    if isAfter:
+        era_prefix = "AfterLive"
+
     era = [
         (30, "01mo"),
         (90, "03mo"),
@@ -353,6 +380,8 @@ def process_row(row):
         (365, "12mo"),
     ]
     period_final = "13moToMax"
+    delta_days_13mo = 395
+
     stat_types = {
         "GainTotalPct": ("cumulative_return", 0, 100),
         "GainAnnualizedPct": ("annualized_rate_of_return", 0, 100),
@@ -371,17 +400,21 @@ def process_row(row):
     # dates
     live_date = pd.to_datetime(row["info_live_date"]).date()
     start_date = pd.to_datetime(row["info_start_date"]).date()
-    end_date = live_date
-    beyond_13mo_date = live_date - datetime.timedelta(days=395)
+    bt_start = None
+    bt_end = None
 
     # Iterate through each stat type and get stats
     for stat_name, stat_tuple in stat_types.items():
         stat_json_name, default_value, multiplier = stat_tuple
+
         # get stat for period_final first, as this is a max
         results_key = f"{stat_name}_{era_prefix}_{period_final}"
         results[results_key] = None
-        if beyond_13mo_date > start_date:
-            json = single_backtest(row["id"], start_date, end_date)
+        bt_start, bt_end = get_era_dates(
+            isAfter, start_date, live_date, delta_days_13mo, True
+        )
+        if bt_start is not None and bt_end is not None:
+            json = single_backtest(row["id"], bt_start, bt_end)
             results[results_key] = (
                 json["stats"].get(stat_json_name, default_value) * multiplier
             )
@@ -390,14 +423,12 @@ def process_row(row):
         for days, description in era:
             results_key = f"{stat_name}_{era_prefix}_{description}"
             results[results_key] = None
-            start_date_adjusted = live_date - datetime.timedelta(days=days)
-            if start_date_adjusted <= row["info_start_date"]:
-                continue
-            end_date_adjusted = live_date
-            json = single_backtest(row["id"], start_date_adjusted, end_date_adjusted)
-            results[results_key] = (
-                json["stats"].get(stat_json_name, default_value) * multiplier
-            )
+            bt_start, bt_end = get_era_dates(isAfter, start_date, live_date, days)
+            if bt_start is not None and bt_end is not None:
+                json = single_backtest(row["id"], bt_start, bt_end)
+                results[results_key] = (
+                    json["stats"].get(stat_json_name, default_value) * multiplier
+                )
 
     return results
 
