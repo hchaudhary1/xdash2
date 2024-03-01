@@ -438,12 +438,18 @@ def before_live(df):
     with ThreadPoolExecutor() as executor:
         results = list(executor.map(process_row, df.to_dict("records")))
 
-    for result in results:
-        if result is not None:
-            symph_id = result.pop(list(result.keys())[0])
-            for description, value in result.items():
-                row_index = df.index[df["id"] == symph_id].tolist()[0]
-                df.at[row_index, description] = value
+    for curr_row_dict in results:
+        if curr_row_dict is None:
+            continue
+        symph_id_key = list(curr_row_dict.keys())[0]
+        symph_id = curr_row_dict.pop(symph_id_key)
+
+        # copy data for symph_id into df
+        for column_key, value in curr_row_dict.items():
+            matching_rows = df.index[df["id"] == symph_id].tolist()
+            if matching_rows:
+                row_index = matching_rows[0]
+                df.at[row_index, column_key] = value
 
 
 def main():
