@@ -306,11 +306,12 @@ def find_min_date_int(sym_id):
 def get_symph_dates():
     symphony_ids = get_symphony_list("2024-01-28.csv")
     df = pd.DataFrame(symphony_ids, columns=["id"])
-    # df = df.head(100)
 
-    df["info_size"] = None
-    df["info_start_date"] = None
-    df["info_live_date"] = None
+    df.loc[:, "info_size"] = None
+    df.loc[:, "info_start_date"] = None
+    df.loc[:, "info_live_date"] = None
+
+    df = df.head(100)
 
     def process_row(row):
         symphony_id = row.id
