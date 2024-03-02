@@ -466,9 +466,13 @@ def main():
     df = get_symph_dates()
     before_live(df)
 
+    first_columns = ["id", "info_size", "info_start_date", "info_live_date"]
+    remaining_columns = sorted([col for col in df.columns if col not in first_columns])
+    new_order = first_columns + remaining_columns
+    df = df[new_order]
+
     df.to_csv("output.csv", index=False)
     print(df.tail(10))
-    v_print("--- DONE ---")
 
 
 # before live
