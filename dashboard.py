@@ -1,4 +1,4 @@
-import streamlit as st
+no import streamlit as st
 
 tab1, tab2 = st.tabs(["Simple-Screener", "Data-Explorer"])
 
