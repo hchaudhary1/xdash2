@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import pytz
 import requests
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -19,6 +20,7 @@ XOM_SYMPH_ID = "cv9jhez5EhhG00KHDlly"
 DELISTED_SYMPH_ID = "Do36TWTu1gWh8SewO1Go"
 last_call_time = None
 
+dir_creation_lock = threading.Lock()
 
 def v_print(*args, **kwargs):
     global last_call_time
@@ -53,6 +55,13 @@ def v_print(*args, **kwargs):
 def epoch_days_to_date(days: int) -> datetime.date:
     return datetime.datetime.fromtimestamp(days * 24 * 60 * 60, tz=pytz.UTC).date()
 
+def ensure_folder_exists(folder_name):
+    # Ensure the folder exists
+    if not os.path.exists(folder_name):
+        with dir_creation_lock:
+            # Check again inside the lock to avoid race condition
+            if not os.path.exists(folder_name):
+                os.makedirs(folder_name)
 
 def single_backtest(symph_id, start_date, end_date, max_retries=3):
     if isinstance(start_date, str):
@@ -67,9 +76,7 @@ def single_backtest(symph_id, start_date, end_date, max_retries=3):
     file_name = f"2_{symph_id}-{start_date}-to-{end_date}.json"
     folder_name = "backtest_results"
 
-    # Ensure the folder exists
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
+    ensure_folder_exists(folder_name)
 
     # Construct the full file path
     file_path = os.path.join(folder_name, file_name)
@@ -124,6 +131,7 @@ def single_backtest(symph_id, start_date, end_date, max_retries=3):
             return None
 
 
+
 def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
     # Get today's date in YYYY-MM-DD format
     # Define the file and folder names based on the symphony_id and today's date
@@ -131,9 +139,7 @@ def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
     file_name = f"{symphony_id}-live_start_date-{today}.json"
     folder_name = "live_start_dates"
 
-    # Ensure the folder exists
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
+    ensure_folder_exists(folder_name)
 
     # Construct the full file path
     file_path = os.path.join(folder_name, file_name)
@@ -242,9 +248,7 @@ def get_size_of_symphony(symphony_id):
     file_name = f"{symphony_id}-score-{today}.json"
     folder_name = "symphony_scores"
 
-    # Ensure the folder exists
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
+    ensure_folder_exists(folder_name)
 
     # Construct the full file path
     file_path = os.path.join(folder_name, file_name)
