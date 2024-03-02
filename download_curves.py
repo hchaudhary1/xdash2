@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 DATE_1990 = "1990-01-01"  # 11110
-DATE_TODAY = datetime.date.today().strftime("%Y-%m-%d")
+DATE_TODAY = datetime.date.today()
 DATE_TWO_WEEKS_AGO = (datetime.date.today() - datetime.timedelta(weeks=2)).strftime(
     "%Y-%m-%d"
 )
@@ -127,7 +127,8 @@ def single_backtest(symph_id, start_date, end_date, max_retries=3):
 def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
     # Get today's date in YYYY-MM-DD format
     # Define the file and folder names based on the symphony_id and today's date
-    file_name = f"{symphony_id}-live_start_date-{DATE_TODAY}.json"
+    today = DATE_TODAY.strftime("%Y-%m-%d")
+    file_name = f"{symphony_id}-live_start_date-{today}.json"
     folder_name = "live_start_dates"
 
     # Ensure the folder exists
@@ -236,7 +237,7 @@ def download_multiple_backtests(symphony_ids, start_date, end_date):
 
 def get_size_of_symphony(symphony_id):
     v_print(f"get size: {symphony_id}")
-    today = DATE_TODAY
+    today = DATE_TODAY.strftime("%Y-%m-%d")
 
     file_name = f"{symphony_id}-score-{today}.json"
     folder_name = "symphony_scores"
@@ -284,14 +285,16 @@ def get_size_of_symphony(symphony_id):
 
 def latest_market_day_int():
     if not hasattr(latest_market_day_int, "last_market_day"):
-        curve = single_backtest(XOM_SYMPH_ID, DATE_TWO_WEEKS_AGO, DATE_TODAY)
+        curve = single_backtest(
+            XOM_SYMPH_ID, DATE_TWO_WEEKS_AGO, DATE_TODAY.strftime("%Y-%m-%d")
+        )
         curve = dict(sorted(curve["dvm_capital"][XOM_SYMPH_ID].items()))
         latest_market_day_int.last_market_day = list(curve.keys())[-1]
     return latest_market_day_int.last_market_day
 
 
 def find_min_date_int(sym_id):
-    full_curve = single_backtest(sym_id, DATE_1990, DATE_TODAY)
+    full_curve = single_backtest(sym_id, DATE_1990, DATE_TODAY.strftime("%Y-%m-%d"))
     curve = dict(sorted(full_curve["dvm_capital"][sym_id].items()))
     min_date = list(curve.keys())[0]
     max_date = list(curve.keys())[-1]
