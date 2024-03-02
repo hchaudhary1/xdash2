@@ -210,7 +210,7 @@ def get_symphony_list(file_path):
     with open(file_path, newline="") as csvfile:
         reader = csv.reader(csvfile)
         next(reader)  # Skip the header row
-        return [row[0] for row in reader if row]  # Added check to skip empty rows
+        return [row[1] for row in reader if row]  # Added check to skip empty rows
 
 
 def download_multiple_backtests(symphony_ids, start_date, end_date):
@@ -307,7 +307,7 @@ def find_min_date_int(sym_id):
 
 
 def get_symph_dates():
-    symphony_ids = get_symphony_list("2024-01-28.csv")
+    symphony_ids = get_symphony_list("2024-feb-25.csv")
     df = pd.DataFrame(symphony_ids, columns=["id"])
 
     df.loc[:, "info_size"] = None
