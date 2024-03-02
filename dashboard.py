@@ -1,8 +1,6 @@
 import streamlit as st
+from simple_screener import simple_screener_page
 
-def simple_screener_page():
-    st.write("This is the Simple-Screener page.")
-    # Add more code for Simple-Screener page here
 
 def data_explorer_page():
     st.write("This is the Data-Explorer page.")
