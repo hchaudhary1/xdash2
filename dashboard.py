@@ -1,9 +1,11 @@
 no import streamlit as st
 
-tab1, tab2 = st.tabs(["Simple-Screener", "Data-Explorer"])
+PAGES = {
+    "Simple-Screener": "This is the Simple-Screener page.",
+    "Data-Explorer": "This is the Data-Explorer page."
+}
 
-with tab1:
-    st.write("This is the Simple-Screener tab.")
+selection = st.sidebar.radio("Go to", list(PAGES.keys()))
+page = PAGES[selection]
+st.write(page)
 
-with tab2:
-    st.write("This is the Data-Explorer tab.")
