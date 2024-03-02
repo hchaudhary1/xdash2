@@ -439,7 +439,14 @@ def process_row(row, isAfter=False):
 
 def before_live(df):
     with ThreadPoolExecutor() as executor:
-        results = list(executor.map(process_row, df.to_dict("records")))
+        all_results = []
+        for is_after in [False, True]:
+            all_results.extend(
+                executor.map(
+                    lambda row: process_row(row, is_after), df.to_dict("records")
+                )
+            )
+        results = list(all_results)
 
     for curr_row_dict in results:
         if curr_row_dict is None:
