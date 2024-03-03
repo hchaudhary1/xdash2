@@ -50,9 +50,23 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None):
 
     return selected_values[0], selected_values[1]
 
-## PAGE START ##
 def simple_screener_page():
     st.write("This is the Simple-Screener page.")
 
-    selected_range = log_scale_slider('Select a range of values', -10.0, 10000000.0, num_values=100)
+    # Use the function to create a log-scale slider with direct float values, handling negative start values
+    selected_range = log_scale_slider('Select a range of values', -10.0, 100.0, num_values=100)
+
+    # Display the selected range
     st.write(f"You have selected a range from {selected_range[0]:.2f} to {selected_range[1]:.2f}")
+
+    # Use columns to place the number input boxes side by side
+    col1, col2 = st.columns(2)
+    with col1:
+        start_value = st.number_input("Start Value", value=float(selected_range[0]), format="%.2f")
+    with col2:
+        end_value = st.number_input("End Value", value=float(selected_range[1]), format="%.2f")
+
+    # Check if the user has entered new values and update the selected range accordingly
+    if start_value != selected_range[0] or end_value != selected_range[1]:
+        selected_range = (start_value, end_value)
+        st.write(f"Updated range from {selected_range[0]:.2f} to {selected_range[1]:.2f}")
