@@ -131,7 +131,7 @@ def simple_screener_page():
     if st.button('Add another filter'):
         # Append a new unique identifier for the new filter
         st.session_state.filter_ids.append(str(uuid.uuid4()))
-        st.experimental_rerun()  # Force a rerun of the app to immediately reflect the change
+        st.rerun()  # Force a rerun of the app to immediately reflect the change
 
     # Display the range settings and filter settings for all filters
     st.write("## Summary of Selected Settings")
