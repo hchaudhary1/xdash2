@@ -108,6 +108,9 @@ def simple_screener_page():
     all_custom_df_columns = []
     all_selected_ranges = []
 
+    # Initialize a variable to hold the filtered DataFrame
+    filtered_df = df.copy()
+
     # Display existing filters and collect their selected ranges and df_columns
     for unique_id in st.session_state.filter_ids:
         # Display and collect the custom df_column selection
@@ -115,8 +118,8 @@ def simple_screener_page():
         all_custom_df_columns.append(custom_df_column)
         
         # Get the min and max for the selected df_column
-        column_min = df[custom_df_column].min()
-        column_max = df[custom_df_column].max()
+        column_min = filtered_df[custom_df_column].min()
+        column_max = filtered_df[custom_df_column].max()
 
         # Display and collect the log scale slider selection for each filter
         selected_range = log_scale_slider(
@@ -126,6 +129,9 @@ def simple_screener_page():
             key=f"slider_{unique_id}"  # Ensure each slider has a unique key
         )
         all_selected_ranges.append(selected_range)
+
+        # Apply the filter to the filtered_df
+        filtered_df = filtered_df[(filtered_df[custom_df_column] >= selected_range[0]) & (filtered_df[custom_df_column] <= selected_range[1])]
 
     # Button to add a new filter
     if st.button('Add another filter'):
@@ -139,3 +145,7 @@ def simple_screener_page():
         st.write(f"### Filter #{i}")
         st.write(f"**Custom df_column:** {custom_df_column}")
         st.write(f"**Selected Range:** {selected_range[0]:.2f} to {selected_range[1]:.2f}")
+
+    # Optionally, display the filtered DataFrame or a summary
+    st.write("## Filtered DataFrame")
+    st.write(filtered_df)
