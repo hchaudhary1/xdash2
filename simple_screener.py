@@ -153,5 +153,6 @@ def simple_screener_page():
     
 
     # Optionally, display the filtered DataFrame or a summary
-    st.write("## Filtered List (click column to sort)")
+    st.write("## Filtered List:")
+    st.write("(click column to sort)")
     st.write(filtered_df)
