@@ -54,8 +54,8 @@ def create_custom_df_column(unique_id):
     """
     # Define the lists
     era = [
-        "BeforeLive",
         "AfterLive",
+        "BeforeLive",
     ]
 
     interval = [
