@@ -1,5 +1,5 @@
 import pandas as pd
-import pygwalker as pyg
+from pygwalker.api.streamlit import StreamlitRenderer, init_streamlit_comm
 import streamlit as st
 import streamlit.components.v1 as components
 from simple_screener import simple_screener_page
@@ -18,7 +18,12 @@ st.markdown(hide_settings_menu, unsafe_allow_html=True)
 
 
 def data_explorer_page():
-    st.write("Advacned Explorer page. It may take a second to load...")
+    st.write("Advanced Explorer page. It may take a second to load...")
+    renderer = get_pyg_renderer()
+    renderer.render_explore()
+
+@st.cache(allow_output_mutation=True)
+def get_pyg_renderer() -> "StreamlitRenderer":
     df = pd.read_csv(
         "./output.csv",
         na_values=[
@@ -35,8 +40,9 @@ def data_explorer_page():
         ],
     )
     
-    pyg_html = pyg.to_html(df, env='Streamlit', spec=vis_spec)
-    components.html(pyg_html, height=1000, scrolling=False)
+    return StreamlitRenderer(df, spec="./gw_config.json", debug=False)
+
+init_streamlit_comm()
 
 PAGES = {
     "Simple Selector": simple_screener_page,
