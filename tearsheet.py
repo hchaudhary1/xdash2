@@ -1,13 +1,18 @@
 import datetime
 import os
 import pandas as pd
+import quantstats as qs
 import requests
 import streamlit as st
 import time
+from download_curves import single_backtest, epoch_days_to_date
 from pyhtml2pdf import converter
 
+ONLY_LIVE = "Only LIVE data"
+ALL_DATA = "All data (before and after LIVE)"
+
 def single_tearsheet():
-    option1 = st.selectbox("Select Time Range:", ("Only LIVE data", "All data (before and after LIVE)"))
+    option1 = st.selectbox("Select Time Range:", (ONLY_LIVE, ALL_DATA))
 
     def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
         retries = 0
@@ -93,7 +98,7 @@ def single_tearsheet():
     if symphony_id_button:
         # if the symphony id is not empty
         if symphony_id != "":
-            if option1 == "After Live":
+            if option1 == ONLY_LIVE:
                 # get the live start date
                 live_start_date = get_live_start_date(symphony_id)
 
@@ -103,11 +108,10 @@ def single_tearsheet():
                     st.write(f"Live Start Date: {live_start_date}")
 
                     # get the symphony data
-                    backtest = run_backtest(
-                        '["^ ","~:benchmark_symphonies",[],"~:benchmark_tickers",["SPY"],"~:backtest_version","v2","~:apply_reg_fee",true,"~:apply_taf_fee",true,"~:slippage_percent",0.0005,"~:start_date","'
-                        + str(live_start_date)
-                        + '","~:capital",10000]',
+                    backtest = single_backtest(
                         symphony_id,
+                        live_start_date,
+                        datetime.date.today().strftime("%Y-%m-%d")
                     )
                     returns = calculate_returns_from_dvm_capital(
                         backtest["dvm_capital"][symphony_id]
@@ -118,7 +122,7 @@ def single_tearsheet():
                         title=str(symphony_id) + " Tearsheet",
                     )
                     # convert it to pdf
-                    st.write("TearSheet generated successfully!")
+                    st.write("TearSheet computed. Generating PDF....")
 
                     # read the html file
                     html_content = read_html_file(str(symphony_id) + "_tearsheet.html")
@@ -146,15 +150,14 @@ def single_tearsheet():
                             mime="application/pdf",
                         )
 
-            elif option1 == "Max":
+            elif option1 == ALL_DATA:
                 # set date 1/1/1990 as the start date
                 start_date = datetime.datetime(1990, 1, 1).strftime("%Y-%m-%d")
                 # get the symphony data
-                backtest = run_backtest(
-                    '["^ ","~:benchmark_symphonies",[],"~:benchmark_tickers",["SPY"],"~:backtest_version","v2","~:apply_reg_fee",true,"~:apply_taf_fee",true,"~:slippage_percent",0.0005,"~:start_date","'
-                    + str(start_date)
-                    + '","~:capital",10000]',
+                backtest = single_backtest(
                     symphony_id,
+                    start_date,
+                    datetime.date.today()
                 )
                 returns = calculate_returns_from_dvm_capital(
                     backtest["dvm_capital"][symphony_id]
@@ -165,7 +168,7 @@ def single_tearsheet():
                     title=str(symphony_id) + " Tearsheet",
                 )
                 # convert it to pdf
-                st.write("TearSheet generated successfully!")
+                st.write("TearSheet computed. Generating PDF....")
 
                 # read the html file
                 html_content = read_html_file(str(symphony_id) + "_tearsheet.html")
