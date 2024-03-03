@@ -11,12 +11,12 @@ st.markdown(hide_settings_menu, unsafe_allow_html=True)
 
 
 def data_explorer_page():
-    st.write("This is the Data-Explorer page.")
+    st.write("This is the Advacned Explorer page.")
     # Add more code for Data-Explorer page here
 
 PAGES = {
-    "Simple-Screener": simple_screener_page,
-    "Data-Explorer": data_explorer_page
+    "Simple Selector": simple_screener_page,
+    "Advacned Explorer": data_explorer_page
 }
 
 selection = st.sidebar.radio("Navigation:", list(PAGES.keys()))
