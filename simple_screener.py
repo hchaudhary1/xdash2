@@ -98,11 +98,13 @@ def simple_screener_page():
     # Load the DataFrame at the very start
     df = pd.read_csv("output.csv")
 
-    st.write("Choose your filter settings:")
+    st.write("## Choose your filters")
 
     # Initialize or increment the list of unique identifiers for filters
     if 'filter_ids' not in st.session_state:
         st.session_state.filter_ids = [str(uuid.uuid4())]
+    if 'sort_id' not in st.session_state:
+        st.session_state.sort_id = [str(uuid.uuid4())]
 
     # Lists to store the settings for all filters
     all_custom_df_columns = []
@@ -140,12 +142,16 @@ def simple_screener_page():
         st.rerun()  # Force a rerun of the app to immediately reflect the change
 
     # Display the range settings and filter settings for all filters
-    st.write("## Summary of Selected Settings")
-    for i, (custom_df_column, selected_range) in enumerate(zip(all_custom_df_columns, all_selected_ranges), start=1):
-        st.write(f"### Filter #{i}")
-        st.write(f"**Custom df_column:** {custom_df_column}")
-        st.write(f"**Selected Range:** {selected_range[0]:.2f} to {selected_range[1]:.2f}")
+    # st.write("## Summary of Selected Settings")
+    # for i, (custom_df_column, selected_range) in enumerate(zip(all_custom_df_columns, all_selected_ranges), start=1):
+    #     st.write(f"### Filter #{i}")
+    #     st.write(f"**Custom df_column:** {custom_df_column}")
+    #     st.write(f"**Selected Range:** {selected_range[0]:.2f} to {selected_range[1]:.2f}")
+
+    # st.write("## 2. Select sort criterion:")
+    # custom_df_column = create_custom_df_column(st.session_state.sort_id)
+    
 
     # Optionally, display the filtered DataFrame or a summary
-    st.write("## Filtered DataFrame")
+    st.write("## Filtered List (click column to sort)")
     st.write(filtered_df)
