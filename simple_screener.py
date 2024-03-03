@@ -53,10 +53,10 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None, key=
 
     return selected_values[0], selected_values[1]
 
-def create_custom_sentence():
-    # Generate a unique identifier for this instance
-    instance_id = str(uuid.uuid4())
-
+def create_custom_sentence(unique_id):
+    """
+    Function adjusted to accept a unique identifier for stable widget keys.
+    """
     # Define the lists
     era = [
         "BeforeLive",
@@ -86,14 +86,13 @@ def create_custom_sentence():
     # Create columns for the select boxes
     col1, col2, col3 = st.columns(3)
 
-    # Place a select box in each column and get the user's selections
-    # Use the generated UUID as part of the key for each widget
+    # Use the unique_id as part of the key for each widget
     with col1:
-        selected_interval = st.selectbox("Choose the interval", interval, key=f"interval_{instance_id}")
+        selected_interval = st.selectbox("Choose the interval", interval, key=f"interval_{unique_id}")
     with col2:
-        selected_category = st.selectbox("Choose the category", category, key=f"category_{instance_id}")
+        selected_era = st.selectbox("Choose the era", era, key=f"era_{unique_id}")
     with col3:
-        selected_era = st.selectbox("Choose the era", era, key=f"era_{instance_id}")
+        selected_category = st.selectbox("Choose the category", category, key=f"category_{unique_id}")
 
     # Construct and return the sentence
     return f"{selected_category}_{selected_era}_{selected_interval}"
@@ -101,35 +100,42 @@ def create_custom_sentence():
 
 ## PAGE START ##
 def simple_screener_page():
-    st.write("This is the Simple-Screener page.")
+    st.write("Choose your filter settings:")
 
-    # Initialize or increment the number of filters
-    if 'num_filters' not in st.session_state:
-        st.session_state.num_filters = 1
+    # Initialize or increment the list of unique identifiers for filters
+    if 'filter_ids' not in st.session_state:
+        st.session_state.filter_ids = [str(uuid.uuid4())]
 
-    # Initialize a list to store the selected ranges for each filter
-    selected_ranges = []
+    # Lists to store the settings for all filters
+    all_custom_sentences = []
+    all_selected_ranges = []
 
-    # Display existing filters and collect their selected ranges
-    for i in range(st.session_state.num_filters):
-        create_custom_sentence()
+    # Display existing filters and collect their selected ranges and sentences
+    for unique_id in st.session_state.filter_ids:
+        # Display and collect the custom sentence selection
+        custom_sentence = create_custom_sentence(unique_id)
+        all_custom_sentences.append(custom_sentence)
+        
+        # Display and collect the log scale slider selection for each filter
         selected_range = log_scale_slider(
-            label=f'Select a range of values #{i+1}',
+            label=f'Select a range of values for {custom_sentence}',
             start=-10.0,
             end=10000000.0,
             num_values=100,
             default_range=None,
-            key=f"slider_{i}"  # Ensure each slider has a unique key
+            key=f"slider_{unique_id}"  # Ensure each slider has a unique key
         )
-        # Add the selected range to the list
-        selected_ranges.append(selected_range)
+        all_selected_ranges.append(selected_range)
 
     # Button to add a new filter
     if st.button('Add another filter'):
-        st.session_state.num_filters += 1
+        # Append a new unique identifier for the new filter
+        st.session_state.filter_ids.append(str(uuid.uuid4()))
         st.experimental_rerun()  # Force a rerun of the app to immediately reflect the change
 
-    # Display the selected ranges for all filters at the bottom
-    st.write("Selected ranges for all filters:")
-    for i, range_ in enumerate(selected_ranges, start=1):
-        st.write(f"Filter #{i}: {range_[0]:.2f} to {range_[1]:.2f}")
+    # Display the range settings and filter settings for all filters
+    st.write("## Summary of Selected Settings")
+    for i, (custom_sentence, selected_range) in enumerate(zip(all_custom_sentences, all_selected_ranges), start=1):
+        st.write(f"### Filter #{i}")
+        st.write(f"**Custom Sentence:** {custom_sentence}")
+        st.write(f"**Selected Range:** {selected_range[0]:.2f} to {selected_range[1]:.2f}")
