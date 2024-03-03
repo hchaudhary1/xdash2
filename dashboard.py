@@ -34,8 +34,9 @@ def data_explorer_page():
             "",
         ],
     )
-    pyg_html = pyg.to_html(df)
-    components.html(pyg_html, height=1000)
+    
+    pyg_html = pyg.to_html(df, env='Streamlit', spec=vis_spec)
+    components.html(pyg_html, height=1000, scrolling=False)
 
 PAGES = {
     "Simple Selector": simple_screener_page,
