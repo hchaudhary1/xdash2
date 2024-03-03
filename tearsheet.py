@@ -11,6 +11,7 @@ from pyhtml2pdf import converter
 ONLY_LIVE = "Only LIVE data"
 ALL_DATA = "All data (before and after LIVE)"
 
+
 def single_tearsheet():
     option1 = st.selectbox("Select Time Range:", (ONLY_LIVE, ALL_DATA))
 
@@ -111,7 +112,8 @@ def single_tearsheet():
                     backtest = single_backtest(
                         symphony_id,
                         live_start_date,
-                        datetime.date.today().strftime("%Y-%m-%d")
+                        datetime.date.today(),
+                        use_stored=False,
                     )
                     returns = calculate_returns_from_dvm_capital(
                         backtest["dvm_capital"][symphony_id]
@@ -155,9 +157,7 @@ def single_tearsheet():
                 start_date = datetime.datetime(1990, 1, 1).strftime("%Y-%m-%d")
                 # get the symphony data
                 backtest = single_backtest(
-                    symphony_id,
-                    start_date,
-                    datetime.date.today()
+                    symphony_id, start_date, datetime.date.today(), use_stored=False
                 )
                 returns = calculate_returns_from_dvm_capital(
                     backtest["dvm_capital"][symphony_id]

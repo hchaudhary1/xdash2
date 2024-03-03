@@ -22,6 +22,7 @@ last_call_time = None
 
 dir_creation_lock = threading.Lock()
 
+
 def v_print(*args, **kwargs):
     global last_call_time
 
@@ -55,6 +56,7 @@ def v_print(*args, **kwargs):
 def epoch_days_to_date(days: int) -> datetime.date:
     return datetime.datetime.fromtimestamp(days * 24 * 60 * 60, tz=pytz.UTC).date()
 
+
 def ensure_folder_exists(folder_name):
     # Ensure the folder exists
     if not os.path.exists(folder_name):
@@ -63,7 +65,8 @@ def ensure_folder_exists(folder_name):
             if not os.path.exists(folder_name):
                 os.makedirs(folder_name)
 
-def single_backtest(symph_id, start_date, end_date, max_retries=3):
+
+def single_backtest(symph_id, start_date, end_date, max_retries=3, use_stored=True):
     if isinstance(start_date, str):
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     if isinstance(end_date, str):
@@ -83,7 +86,7 @@ def single_backtest(symph_id, start_date, end_date, max_retries=3):
 
     try:
         # Check if the results file already exists
-        if os.path.exists(file_path):
+        if os.path.exists(file_path) and use_stored:
             v_print(f"Reading from existing file {file_name}")
             with open(file_path, "r") as file:
                 return json.load(file)
@@ -129,7 +132,6 @@ def single_backtest(symph_id, start_date, end_date, max_retries=3):
                 f"An unexpected error occurred during backtest for id {symph_id}: {e}"
             )
             return None
-
 
 
 def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
