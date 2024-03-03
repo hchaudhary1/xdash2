@@ -1,6 +1,11 @@
+import pandas as pd
+import pygwalker as pyg
 import streamlit as st
+import streamlit.components.v1 as components
 from simple_screener import simple_screener_page
 from tearsheet import single_tearsheet
+
+st.set_page_config(layout="wide")
 
 # Hide the Streamlit settings menu
 hide_settings_menu = """
@@ -11,9 +16,26 @@ hide_settings_menu = """
 st.markdown(hide_settings_menu, unsafe_allow_html=True)
 
 
+
 def data_explorer_page():
     st.write("This is the Advacned Explorer page.")
-    # Add more code for Data-Explorer page here
+    df = pd.read_csv(
+        "./output.csv",
+        na_values=[
+            "#N/A N/A",
+            "#N/A",
+            "N/A",
+            "n/a",
+            "nan",
+            "NaN",
+            "NA",
+            "nan",
+            "NAN",
+            "",
+        ],
+    )
+    pyg_html = pyg.to_html(df)
+    components.html(pyg_html, height=1000)
 
 PAGES = {
     "Simple Selector": simple_screener_page,
