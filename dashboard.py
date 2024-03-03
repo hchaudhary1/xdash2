@@ -24,7 +24,7 @@ def data_explorer_page():
     renderer = get_pyg_renderer()
     renderer.render_explore()
 
-@st.cache(allow_output_mutation=True)
+@st.cache_data
 def get_pyg_renderer() -> "StreamlitRenderer":
     df = pd.read_csv(
         "./output.csv",
@@ -41,6 +41,8 @@ def get_pyg_renderer() -> "StreamlitRenderer":
             "",
         ],
     )
+
+    return StreamlitRenderer(df, spec=vis_spec, debug=False)
     
     return StreamlitRenderer(df, spec=vis_spec, debug=False)
 
@@ -55,4 +57,3 @@ PAGES = {
 selection = st.sidebar.radio("Navigation:", list(PAGES.keys()))
 page_function = PAGES[selection]
 page_function()
-
