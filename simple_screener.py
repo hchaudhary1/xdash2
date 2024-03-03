@@ -53,7 +53,7 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None, key=
 
     return selected_values[0], selected_values[1]
 
-def create_custom_sentence(unique_id):
+def create_custom_df_column(unique_id):
     """
     Function adjusted to accept a unique identifier for stable widget keys.
     """
@@ -88,17 +88,17 @@ def create_custom_sentence(unique_id):
 
     # Use the unique_id as part of the key for each widget
     with col1:
-        selected_interval = st.selectbox("Choose the interval", interval, key=f"interval_{unique_id}")
+        selected_interval = st.selectbox("Time range:", interval, key=f"interval_{unique_id}")
     with col2:
-        selected_era = st.selectbox("Choose the era", era, key=f"era_{unique_id}")
+        selected_era = st.selectbox("When:", era, key=f"era_{unique_id}")
     with col3:
-        selected_category = st.selectbox("Choose the category", category, key=f"category_{unique_id}")
+        selected_category = st.selectbox("Metric:", category, key=f"category_{unique_id}")
 
-    # Construct and return the sentence
+    # Construct and return the df_column
     return f"{selected_category}_{selected_era}_{selected_interval}"
     
 
-## PAGE START ##
+## PAGE STREAMLIT START ##
 def simple_screener_page():
     st.write("Choose your filter settings:")
 
@@ -107,18 +107,18 @@ def simple_screener_page():
         st.session_state.filter_ids = [str(uuid.uuid4())]
 
     # Lists to store the settings for all filters
-    all_custom_sentences = []
+    all_custom_df_columns = []
     all_selected_ranges = []
 
-    # Display existing filters and collect their selected ranges and sentences
+    # Display existing filters and collect their selected ranges and df_columns
     for unique_id in st.session_state.filter_ids:
-        # Display and collect the custom sentence selection
-        custom_sentence = create_custom_sentence(unique_id)
-        all_custom_sentences.append(custom_sentence)
+        # Display and collect the custom df_column selection
+        custom_df_column = create_custom_df_column(unique_id)
+        all_custom_df_columns.append(custom_df_column)
         
         # Display and collect the log scale slider selection for each filter
         selected_range = log_scale_slider(
-            label=f'Select a range of values for {custom_sentence}',
+            label=f'Select a range of values for {custom_df_column}',
             start=-10.0,
             end=10000000.0,
             num_values=100,
@@ -135,7 +135,7 @@ def simple_screener_page():
 
     # Display the range settings and filter settings for all filters
     st.write("## Summary of Selected Settings")
-    for i, (custom_sentence, selected_range) in enumerate(zip(all_custom_sentences, all_selected_ranges), start=1):
+    for i, (custom_df_column, selected_range) in enumerate(zip(all_custom_df_columns, all_selected_ranges), start=1):
         st.write(f"### Filter #{i}")
-        st.write(f"**Custom Sentence:** {custom_sentence}")
+        st.write(f"**Custom df_column:** {custom_df_column}")
         st.write(f"**Selected Range:** {selected_range[0]:.2f} to {selected_range[1]:.2f}")
