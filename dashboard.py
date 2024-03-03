@@ -18,7 +18,7 @@ st.markdown(hide_settings_menu, unsafe_allow_html=True)
 
 
 def data_explorer_page():
-    st.write("This is the Advacned Explorer page.")
+    st.write("Advacned Explorer page. It may take a second to load...")
     df = pd.read_csv(
         "./output.csv",
         na_values=[
