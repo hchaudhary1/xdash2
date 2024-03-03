@@ -1,6 +1,14 @@
 import streamlit as st
 from simple_screener import simple_screener_page
 
+# Hide the Streamlit settings menu
+hide_settings_menu = """
+    <style>
+        #MainMenu {visibility: hidden;}
+    </style>
+    """
+st.markdown(hide_settings_menu, unsafe_allow_html=True)
+
 
 def data_explorer_page():
     st.write("This is the Data-Explorer page.")
