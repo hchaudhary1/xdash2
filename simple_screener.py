@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import uuid
 
-def log_scale_slider(label, start, end, num_values=100, default_range=None, key=None):
+def log_scale_slider(label, start, end, key=None):
     """
     Creates a log-scaled range slider with direct float values, adjusting for negative start values.
 
@@ -11,8 +11,6 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None, key=
     - label (str): The label displayed above the slider.
     - start (float): The start of the range.
     - end (float): The end of the range.
-    - num_values (int): Number of discrete values in the slider.
-    - default_range (tuple): The default selected range (start, end). If None, full range is selected.
     - key (str): Unique identifier for the slider.
 
     Returns:
@@ -24,7 +22,7 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None, key=
     shifted_end = end + shift
 
     # Generate an array of log-spaced values with the shifted range
-    log_values = np.geomspace(shifted_start, shifted_end, num=num_values)
+    log_values = np.geomspace(shifted_start, shifted_end, num=1000)
 
     # Unshift the log_values to get back to the original intended range
     log_values_unshifted = log_values - shift
@@ -35,11 +33,7 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None, key=
     # Create a dictionary to map the labels back to the original values
     label_to_value = {label: value for label, value in zip(log_labels, log_values_unshifted)}
 
-    # Determine the default range labels
-    if default_range is not None:
-        default_labels = (f"{default_range[0]:.2f}", f"{default_range[1]:.2f}")
-    else:
-        default_labels = (log_labels[0], log_labels[-1])
+    default_labels = (log_labels[0], log_labels[-1])
 
     # Use the labels as options in select_slider for user selection
     selected_labels = st.select_slider(
@@ -129,8 +123,6 @@ def simple_screener_page():
             label=f'Select a range of values for {custom_df_column}',
             start=column_min,
             end=column_max,
-            num_values=100,
-            default_range=None,
             key=f"slider_{unique_id}"  # Ensure each slider has a unique key
         )
         all_selected_ranges.append(selected_range)
