@@ -1,5 +1,6 @@
 import streamlit as st
 from simple_screener import simple_screener_page
+from tearsheet import single_tearsheet
 
 # Hide the Streamlit settings menu
 hide_settings_menu = """
@@ -16,7 +17,8 @@ def data_explorer_page():
 
 PAGES = {
     "Simple Selector": simple_screener_page,
-    "Advacned Explorer": data_explorer_page
+    "Advacned Explorer": data_explorer_page,
+    "Single ID DeepDive": single_tearsheet
 }
 
 selection = st.sidebar.radio("Navigation:", list(PAGES.keys()))
