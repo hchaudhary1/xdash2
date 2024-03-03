@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 
-def log_scale_slider(label, start, end, num_values=100, default_range=None):
+def log_scale_slider(label, start, end, num_values=100, default_range=None, key=None):
     """
     Creates a log-scaled range slider with direct float values, adjusting for negative start values.
 
@@ -11,6 +11,7 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None):
     - end (float): The end of the range.
     - num_values (int): Number of discrete values in the slider.
     - default_range (tuple): The default selected range (start, end). If None, full range is selected.
+    - key (str): Unique identifier for the slider.
 
     Returns:
     - tuple: Selected range (start, end) in the original scale.
@@ -42,7 +43,8 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None):
     selected_labels = st.select_slider(
         label,
         options=log_labels,
-        value=default_labels  # Default to full range or specified default
+        value=default_labels,  # Default to full range or specified default
+        key=key  # Pass the key parameter to the select_slider
     )
 
     # Map the selected labels back to their original values
@@ -51,8 +53,27 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None):
     return selected_values[0], selected_values[1]
 
 ## PAGE START ##
+## PAGE START ##
 def simple_screener_page():
     st.write("This is the Simple-Screener page.")
 
-    selected_range = log_scale_slider('Select a range of values', -10.0, 10000000.0, num_values=100)
-    st.write(f"You have selected a range from {selected_range[0]:.2f} to {selected_range[1]:.2f}")
+    # Initialize or increment the number of filters
+    if 'num_filters' not in st.session_state:
+        st.session_state.num_filters = 1
+
+    # Display existing filters
+    for i in range(st.session_state.num_filters):
+        selected_range = log_scale_slider(
+            label=f'Select a range of values #{i+1}',
+            start=-10.0,
+            end=10000000.0,
+            num_values=100,
+            default_range=None,
+            key=f"slider_{i}"  # Ensure each slider has a unique key
+        )
+        st.write(f"You have selected a range from {selected_range[0]:.2f} to {selected_range[1]:.2f}")
+
+    # Button to add a new filter
+    if st.button('Add another filter'):
+        st.session_state.num_filters += 1
+        st.experimental_rerun()  # Force a rerun of the app to immediately reflect the change
