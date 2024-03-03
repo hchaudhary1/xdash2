@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import uuid
 
 def log_scale_slider(label, start, end, num_values=100, default_range=None, key=None):
     """
@@ -52,6 +53,52 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None, key=
 
     return selected_values[0], selected_values[1]
 
+def create_custom_sentence():
+    # Generate a unique identifier for this instance
+    instance_id = str(uuid.uuid4())
+
+    # Define the lists
+    era = [
+        "BeforeLive",
+        "AfterLive",
+    ]
+
+    interval = [
+        "01mo",
+        "03mo",
+        "06mo",
+        "12mo",
+        "13moToMax",
+    ]
+
+    category = [
+        "GainTotalPct",
+        "GainAnnualizedPct",
+        "DrawdownMaxPct",
+        "Calmar",
+        "Sharpe",
+        "DayBestPct",
+        "DayWorstPct",
+        "DayAvgPct",
+        "DayStdDevPct",
+    ]
+
+    # Create columns for the select boxes
+    col1, col2, col3 = st.columns(3)
+
+    # Place a select box in each column and get the user's selections
+    # Use the generated UUID as part of the key for each widget
+    with col1:
+        selected_interval = st.selectbox("Choose the interval", interval, key=f"interval_{instance_id}")
+    with col2:
+        selected_category = st.selectbox("Choose the category", category, key=f"category_{instance_id}")
+    with col3:
+        selected_era = st.selectbox("Choose the era", era, key=f"era_{instance_id}")
+
+    # Construct and return the sentence
+    return f"{selected_category}_{selected_era}_{selected_interval}"
+    
+
 ## PAGE START ##
 def simple_screener_page():
     st.write("This is the Simple-Screener page.")
@@ -65,6 +112,7 @@ def simple_screener_page():
 
     # Display existing filters and collect their selected ranges
     for i in range(st.session_state.num_filters):
+        create_custom_sentence()
         selected_range = log_scale_slider(
             label=f'Select a range of values #{i+1}',
             start=-10.0,
