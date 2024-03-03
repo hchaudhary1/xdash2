@@ -18,7 +18,7 @@ def data_explorer_page():
 PAGES = {
     "Simple Selector": simple_screener_page,
     "Advacned Explorer": data_explorer_page,
-    "Single ID DeepDive": single_tearsheet
+    "Single ID QuantStat": single_tearsheet
 }
 
 selection = st.sidebar.radio("Navigation:", list(PAGES.keys()))
