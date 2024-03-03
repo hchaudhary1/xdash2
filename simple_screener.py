@@ -98,7 +98,7 @@ def simple_screener_page():
     # Load the DataFrame at the very start
     df = pd.read_csv("output.csv")
 
-    st.write("## Choose your filters")
+    st.write("## 1. Choose your filters:")
 
     # Initialize or increment the list of unique identifiers for filters
     if 'filter_ids' not in st.session_state:
@@ -148,11 +148,13 @@ def simple_screener_page():
     #     st.write(f"**Custom df_column:** {custom_df_column}")
     #     st.write(f"**Selected Range:** {selected_range[0]:.2f} to {selected_range[1]:.2f}")
 
-    # st.write("## 2. Select sort criterion:")
-    # custom_df_column = create_custom_df_column(st.session_state.sort_id)
-    
+    st.write("## 2. Sort by:")
+    custom_df_column = create_custom_df_column(st.session_state.sort_id)
+    st.write("(or click on column name to manually sort, below)")
 
-    # Optionally, display the filtered DataFrame or a summary
-    st.write("## Filtered List:")
-    st.write("(click column to sort)")
-    st.write(filtered_df)
+    # Display the filtered DataFrame or a summary
+    st.write("## 3. Filtered List:")
+    
+    # Reset the index of the DataFrame and then display it without the index column
+    sorted_df = filtered_df.sort_values(by=custom_df_column, ascending=False)
+    st.dataframe(sorted_df.reset_index(drop=True), use_container_width=True)
