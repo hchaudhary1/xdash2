@@ -53,7 +53,6 @@ def log_scale_slider(label, start, end, num_values=100, default_range=None, key=
     return selected_values[0], selected_values[1]
 
 ## PAGE START ##
-## PAGE START ##
 def simple_screener_page():
     st.write("This is the Simple-Screener page.")
 
@@ -61,7 +60,10 @@ def simple_screener_page():
     if 'num_filters' not in st.session_state:
         st.session_state.num_filters = 1
 
-    # Display existing filters
+    # Initialize a list to store the selected ranges for each filter
+    selected_ranges = []
+
+    # Display existing filters and collect their selected ranges
     for i in range(st.session_state.num_filters):
         selected_range = log_scale_slider(
             label=f'Select a range of values #{i+1}',
@@ -71,9 +73,15 @@ def simple_screener_page():
             default_range=None,
             key=f"slider_{i}"  # Ensure each slider has a unique key
         )
-        st.write(f"You have selected a range from {selected_range[0]:.2f} to {selected_range[1]:.2f}")
+        # Add the selected range to the list
+        selected_ranges.append(selected_range)
 
     # Button to add a new filter
     if st.button('Add another filter'):
         st.session_state.num_filters += 1
         st.experimental_rerun()  # Force a rerun of the app to immediately reflect the change
+
+    # Display the selected ranges for all filters at the bottom
+    st.write("Selected ranges for all filters:")
+    for i, range_ in enumerate(selected_ranges, start=1):
+        st.write(f"Filter #{i}: {range_[0]:.2f} to {range_[1]:.2f}")
