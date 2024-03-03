@@ -1,5 +1,6 @@
-import streamlit as st
 import numpy as np
+import pandas as pd
+import streamlit as st
 import uuid
 
 def log_scale_slider(label, start, end, num_values=100, default_range=None, key=None):
@@ -100,6 +101,9 @@ def create_custom_df_column(unique_id):
 
 ## PAGE STREAMLIT START ##
 def simple_screener_page():
+    # Load the DataFrame at the very start
+    df = pd.read_csv("output.csv")
+
     st.write("Choose your filter settings:")
 
     # Initialize or increment the list of unique identifiers for filters
@@ -116,11 +120,15 @@ def simple_screener_page():
         custom_df_column = create_custom_df_column(unique_id)
         all_custom_df_columns.append(custom_df_column)
         
+        # Get the min and max for the selected df_column
+        column_min = df[custom_df_column].min()
+        column_max = df[custom_df_column].max()
+
         # Display and collect the log scale slider selection for each filter
         selected_range = log_scale_slider(
             label=f'Select a range of values for {custom_df_column}',
-            start=-10.0,
-            end=10000000.0,
+            start=column_min,
+            end=column_max,
             num_values=100,
             default_range=None,
             key=f"slider_{unique_id}"  # Ensure each slider has a unique key
