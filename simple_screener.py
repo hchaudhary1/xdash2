@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import pyperclip
 import streamlit as st
 import uuid
 from st_aggrid import AgGrid, GridOptionsBuilder
@@ -184,16 +183,10 @@ def simple_screener_page():
     print(selected_row)
     if selected_row:
         selected_symphony_id = selected_row[0]["id"]
-        copy_button = st.button("Copy ID to Clipboard")
-        if copy_button:
-            pyperclip.copy(selected_symphony_id)
-
-        copy_url_btn = st.button("Copy URL to Clipboard")
-        if copy_url_btn:
-            pyperclip.copy(
-                "https://app.composer.trade/symphony/"
-                + selected_symphony_id
-                + "/factsheet"
-            )
+        st.write(
+            "Selected: https://app.composer.trade/symphony/"
+            + selected_symphony_id
+            + "/factsheet"
+        )
         st.write(f"## 4. Return for prior 12 months ({selected_symphony_id}):")
         generate_12mo_plot(selected_symphony_id)
