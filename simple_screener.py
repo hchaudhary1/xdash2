@@ -188,7 +188,7 @@ def simple_screener_page():
         if copy_button:
             pyperclip.copy(selected_symphony_id)
 
-        copy_url_btn = st.button("Copy Composer URL to Clipboard")
+        copy_url_btn = st.button("Copy URL to Clipboard")
         if copy_url_btn:
             pyperclip.copy(
                 "https://app.composer.trade/symphony/"
