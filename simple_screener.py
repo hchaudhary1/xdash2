@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import uuid
+from st_aggrid import AgGrid, GridOptionsBuilder
+
+
+# from teasheet import generate_12mo_plot
 
 
 def log_scale_slider(label, start, end, key=None):
@@ -168,4 +172,12 @@ def simple_screener_page():
 
     # Reset the index of the DataFrame and then display it without the index column
     sorted_df = filtered_df.sort_values(by=custom_df_column, ascending=False)
-    st.dataframe(sorted_df.reset_index(drop=True), use_container_width=True)
+
+    # Configure the grid options
+    gb = GridOptionsBuilder.from_dataframe(sorted_df.reset_index(drop=True))
+    gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=20)
+    gridOptions = gb.build()
+
+    # Display the table with AgGrid using the configured options
+    AgGrid(sorted_df.reset_index(drop=True), gridOptions=gridOptions)
+    # generate_12mo_plot()
