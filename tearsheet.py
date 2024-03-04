@@ -200,3 +200,33 @@ def single_tearsheet():
         else:
             # print that the symphony id is empty
             st.write("Symphony ID is empty")
+
+
+def plot_timeseries_streamlit(returns, title="12mo Returns", lw=1.5, figsize=(6, 4)):
+    returns = qs.utils._prepare_returns(returns)
+    return_plot = qs.plots.returns(returns, show=False)
+    st.pyplot(return_plot)
+
+
+def generate_12mo_plot(selected_symphony_id):
+    today = datetime.date.today()
+    result = single_backtest(
+        selected_symphony_id, today - datetime.timedelta(days=365), today
+    )
+    print(result)
+    if result is not None:
+        result = dict(sorted(result["dvm_capital"][str(selected_symphony_id)].items()))
+        dvm_capital_keys = list(result.keys())
+        dvm_capital_values = list(result.values())
+
+        dvm_capital_series = pd.Series(dvm_capital_values)
+        dvm_capital_pct_change = dvm_capital_series.pct_change().fillna(0)
+
+        dates = [epoch_days_to_date(int(d)) for d in dvm_capital_keys]
+        dvm_capital_pct_change.index = dates
+        returns = pd.DataFrame(dvm_capital_pct_change, index=dates, columns=["returns"])
+        returns.index = pd.to_datetime(returns.index)
+
+        plot_timeseries_streamlit(
+            returns["returns"], title="Returns", lw=1.5, figsize=(10, 6)
+        )

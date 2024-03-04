@@ -1,11 +1,10 @@
 import numpy as np
 import pandas as pd
+import pyperclip
 import streamlit as st
 import uuid
 from st_aggrid import AgGrid, GridOptionsBuilder
-
-
-# from teasheet import generate_12mo_plot
+from tearsheet import generate_12mo_plot
 
 
 def log_scale_slider(label, start, end, key=None):
@@ -176,8 +175,25 @@ def simple_screener_page():
     # Configure the grid options
     gb = GridOptionsBuilder.from_dataframe(sorted_df.reset_index(drop=True))
     gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=20)
+    gb.configure_selection("single")
     gridOptions = gb.build()
 
     # Display the table with AgGrid using the configured options
-    AgGrid(sorted_df.reset_index(drop=True), gridOptions=gridOptions)
-    # generate_12mo_plot()
+    response = AgGrid(sorted_df.reset_index(drop=True), gridOptions=gridOptions)
+    selected_row = response["selected_rows"]
+    print(selected_row)
+    if selected_row:
+        selected_symphony_id = selected_row[0]["id"]
+        copy_button = st.button("Copy ID to Clipboard")
+        if copy_button:
+            pyperclip.copy(selected_symphony_id)
+
+        copy_url_btn = st.button("Copy Composer URL to Clipboard")
+        if copy_url_btn:
+            pyperclip.copy(
+                "https://app.composer.trade/symphony/"
+                + selected_symphony_id
+                + "/factsheet"
+            )
+        st.write(f"## 4. Return for prior 12 months ({selected_symphony_id}):")
+        generate_12mo_plot(selected_symphony_id)
