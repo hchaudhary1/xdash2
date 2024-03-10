@@ -1,2 +1,3 @@
 - for the same day, detect that the live-date has changed. re-do a backtest in this case.
-- 
+- fuzz tester
+- rotation graph

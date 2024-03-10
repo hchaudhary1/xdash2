@@ -20,7 +20,7 @@ def log_scale_slider(label, start, end, key=None):
     - tuple: Selected range (start, end) in the original scale.
     """
     # Shift values to ensure all are positive for geomspace
-    shift = abs(min(start, 0)) + 1
+    shift = abs(min(start, 0)) + 100
     shifted_start = start + shift
     shifted_end = end + shift
 
