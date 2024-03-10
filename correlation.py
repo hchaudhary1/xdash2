@@ -106,7 +106,8 @@ def create_custom_df_column(unique_id):
 
 ## PAGE STREAMLIT START ##
 def correlation_page():
-    user_algo_id = st.text_input("## 1. Enter a known ID, and press ENTER:", "")
+    st.write("## 1. Enter a known ID, and press ENTER:")
+    user_algo_id = st.text_input("", "")
 
     corr_df = pd.read_csv("correlation_matrix.csv")
     corr_df.rename(columns={corr_df.columns[0]: "id"}, inplace=True)
@@ -119,6 +120,9 @@ def correlation_page():
     else:
         return
 
+    st.write(
+        "## 2. OPTIONAL: Filter down database (e.g.: only keep algos with high gains):"
+    )
     # Load the DataFrame at the very start
     df = pd.read_csv("output.csv")
 
@@ -168,20 +172,20 @@ def correlation_page():
 
     # Extract the list of filtered IDs
     short_list_ids = filtered_df["id"].tolist()
-    st.dataframe(short_list_ids)
 
     # Filter the rows in corr_df
     df_filtered_rows = corr_df[corr_df["id"].isin(short_list_ids)]
-    st.dataframe(df_filtered_rows)
+    # st.dataframe(df_filtered_rows)
 
-    # filter the columns to keep only those in 'short_list_ids'
-    sorted_df = df_filtered_rows
-    if len(user_algo_id) == 20:
-        sorted_df = df_filtered_rows[user_algo_id]
+    df_filtered_rows[user_algo_id] = df_filtered_rows[user_algo_id].abs()
+    sorted_df = df_filtered_rows.sort_values(by=user_algo_id, ascending=True)
+
+    st.write(f"## 3. Lowest correlation with {user_algo_id}")
+    st.write("### Select one to plot:")
 
     # Configure the grid options
     gb = GridOptionsBuilder.from_dataframe(sorted_df.reset_index(drop=True))
-    gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=20)
+    gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=10)
     gb.configure_selection("single")
     gridOptions = gb.build()
 
