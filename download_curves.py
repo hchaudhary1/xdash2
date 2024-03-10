@@ -485,11 +485,14 @@ def before_live(df):
 
 
 def read_12mo_curve(symphony_id, data_start):
-    if data_start:
+    if isinstance(data_start, str):
+        data_start = pd.to_datetime(data_start)
+    bt_start = DATE_TODAY - datetime.timedelta(days=365)
+    if bt_start < data_start:
         return None
     backtest = single_backtest(
         symphony_id,
-        DATE_TODAY - datetime.timedelta(days=365),
+        bt_start,
         DATE_TODAY,
     )
     raw_dvm_capital = backtest["dvm_capital"][symphony_id]
@@ -502,15 +505,15 @@ def get_corr(df):
     v_print("getting data for corr")
     all_curves = {}
     for _, row in df.iterrows():
-        curve = read_12mo_curve(row["id"], pd.to_datetime(row["algo_start_date"]))
-        if curve:
+        curve = read_12mo_curve(row["id"], row["algo_start_date"])
+        if curve is not None:
             all_curves[row["id"]] = curve
 
     all_curves_df = pd.DataFrame(all_curves)
     v_print("computing corr")
     correlation_matrix = all_curves_df.corr()
     v_print("compute corr done - saving to csv")
-    correlation_matrix.to_csv("correlation_matrix.csv", index=False)
+    correlation_matrix.to_csv("correlation_matrix.csv", index=True)
     v_print("CSV done")
 
 
