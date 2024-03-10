@@ -2,6 +2,7 @@ import csv
 import datetime
 import inspect
 import json
+import numpy as np
 import os
 import pandas as pd
 import pytz
@@ -483,6 +484,36 @@ def before_live(df):
                 df.at[row_index, column_key] = value
 
 
+def read_12mo_curve(symphony_id, data_start):
+    if data_start:
+        return None
+    backtest = single_backtest(
+        symphony_id,
+        DATE_TODAY - datetime.timedelta(days=365),
+        DATE_TODAY,
+    )
+    raw_dvm_capital = backtest["dvm_capital"][symphony_id]
+    sorted_dvm_capital = dict(sorted(raw_dvm_capital.items()))
+    values = list(sorted_dvm_capital.values())
+    return np.array(values)
+
+
+def get_corr(df):
+    v_print("getting data for corr")
+    all_curves = {}
+    for _, row in df.iterrows():
+        curve = read_12mo_curve(row["id"], pd.to_datetime(row["algo_start_date"]))
+        if curve:
+            all_curves[row["id"]] = curve
+
+    all_curves_df = pd.DataFrame(all_curves)
+    v_print("computing corr")
+    correlation_matrix = all_curves_df.corr()
+    v_print("compute corr done - saving to csv")
+    correlation_matrix.to_csv("correlation_matrix.csv", index=False)
+    v_print("CSV done")
+
+
 def main():
     df = get_symph_dates()
     before_live(df)
@@ -494,6 +525,10 @@ def main():
 
     df.to_csv("output.csv", index=False)
     print(df.tail(10))
+
+    #############################
+
+    get_corr(df)
 
 
 # before live
