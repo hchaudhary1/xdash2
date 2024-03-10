@@ -10,6 +10,12 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+# names -- must be kept int this order
+era_prefixes = [
+    "AfterLive",
+    "BeforeLive",
+    "BeforeToday",
+]
 
 DATE_1990 = "1990-01-01"  # 11110
 DATE_TODAY = datetime.date.today()
@@ -352,10 +358,10 @@ def get_symph_dates():
     return df
 
 
-def get_era_dates(isAfterLive, data_begin, live_date, delta_days, isBeyondDelta=False):
+def get_era_dates(era, data_begin, live_date, delta_days, isBeyondDelta=False):
     bt_start = None
     bt_end = None
-    if isAfterLive:
+    if era == era_prefixes[0]:  # AfterLive
         era_date_mark = live_date + datetime.timedelta(days=delta_days)
         # assumes algos are pre-filtered and running live today
         if era_date_mark <= DATE_TODAY:
@@ -364,7 +370,7 @@ def get_era_dates(isAfterLive, data_begin, live_date, delta_days, isBeyondDelta=
             bt_end = era_date_mark
             if isBeyondDelta:
                 bt_end = DATE_TODAY
-    else:
+    elif era == era_prefixes[1]:  # BeforeLive
         era_date_mark = live_date - datetime.timedelta(days=delta_days)
         if era_date_mark >= data_begin:
             # max BEFORE is valid
@@ -372,16 +378,22 @@ def get_era_dates(isAfterLive, data_begin, live_date, delta_days, isBeyondDelta=
             bt_end = live_date
             if isBeyondDelta:
                 bt_start = data_begin
+    elif era == era_prefixes[2]:  # BeforeToday
+        era_date_mark = DATE_TODAY - datetime.timedelta(days=delta_days)
+        # assumes algos are pre-filtered and running live today
+        if era_date_mark >= data_begin:
+            # max AFTER is valid
+            bt_start = era_date_mark
+            bt_end = DATE_TODAY
+            if isBeyondDelta:
+                bt_end = data_begin
+    else:
+        v_print("UNKNOWN ENUM")
 
     return bt_start, bt_end
 
 
-def process_row(row, isAfter=False):
-
-    # names
-    era_prefix = "BeforeLive"
-    if isAfter:
-        era_prefix = "AfterLive"
+def process_row(row):
 
     era = [
         (30, "01mo"),
@@ -410,35 +422,38 @@ def process_row(row, isAfter=False):
     # dates
     live_date = pd.to_datetime(row["info_live_date"]).date()
     start_date = pd.to_datetime(row["info_start_date"]).date()
-    bt_start = None
-    bt_end = None
 
-    # Iterate through each stat type and get stats
-    for stat_name, stat_tuple in stat_types.items():
-        stat_json_name, default_value, multiplier = stat_tuple
+    for era_prefix in era_prefixes:
+        bt_start = None
+        bt_end = None
+        # Iterate through each stat type and get stats
+        for stat_name, stat_tuple in stat_types.items():
+            stat_json_name, default_value, multiplier = stat_tuple
 
-        # get stat for period_final first, as this is a max
-        results_key = f"{stat_name}_{era_prefix}_{period_final}"
-        results[results_key] = None
-        bt_start, bt_end = get_era_dates(
-            isAfter, start_date, live_date, delta_days_13mo, True
-        )
-        if bt_start is not None and bt_end is not None:
-            json = single_backtest(row["id"], bt_start, bt_end)
-            results[results_key] = (
-                json["stats"].get(stat_json_name, default_value) * multiplier
-            )
-
-        # get stats for rest of the eras
-        for days, description in era:
-            results_key = f"{stat_name}_{era_prefix}_{description}"
+            # get stat for period_final first, as this is a max
+            results_key = f"{stat_name}_{era_prefix}_{period_final}"
             results[results_key] = None
-            bt_start, bt_end = get_era_dates(isAfter, start_date, live_date, days)
+            bt_start, bt_end = get_era_dates(
+                era_prefix, start_date, live_date, delta_days_13mo, True
+            )
             if bt_start is not None and bt_end is not None:
                 json = single_backtest(row["id"], bt_start, bt_end)
                 results[results_key] = (
                     json["stats"].get(stat_json_name, default_value) * multiplier
                 )
+
+            # get stats for rest of the eras
+            for days, description in era:
+                results_key = f"{stat_name}_{era_prefix}_{description}"
+                results[results_key] = None
+                bt_start, bt_end = get_era_dates(
+                    era_prefix, start_date, live_date, days
+                )
+                if bt_start is not None and bt_end is not None:
+                    json = single_backtest(row["id"], bt_start, bt_end)
+                    results[results_key] = (
+                        json["stats"].get(stat_json_name, default_value) * multiplier
+                    )
 
     return results
 
@@ -446,12 +461,9 @@ def process_row(row, isAfter=False):
 def before_live(df):
     with ThreadPoolExecutor() as executor:
         all_results = []
-        for is_after in [False, True]:
-            all_results.extend(
-                executor.map(
-                    lambda row: process_row(row, is_after), df.to_dict("records")
-                )
-            )
+        all_results.extend(
+            executor.map(lambda row: process_row(row), df.to_dict("records"))
+        )
         results = list(all_results)
 
     for curr_row_dict in results:
