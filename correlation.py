@@ -106,10 +106,21 @@ def create_custom_df_column(unique_id):
 
 ## PAGE STREAMLIT START ##
 def correlation_page():
+    user_algo_id = st.text_input("## 1. Enter a known ID, and press ENTER:", "")
+
+    corr_df = pd.read_csv("correlation_matrix.csv")
+    corr_df.rename(columns={corr_df.columns[0]: "id"}, inplace=True)
+    corr_df["id"] = corr_df["id"].astype(str)
+
+    # Check if the column exists
+    if user_algo_id in corr_df.columns:
+        # Keep only the 'id' column and the specified company_name column
+        corr_df = corr_df[["id", user_algo_id]]
+    else:
+        return
+
     # Load the DataFrame at the very start
     df = pd.read_csv("output.csv")
-
-    st.write("## 1. Choose your filters:")
 
     # Initialize or increment the list of unique identifiers for filters
     if "filter_ids" not in st.session_state:
@@ -155,22 +166,18 @@ def correlation_page():
         st.session_state.filter_ids.append(str(uuid.uuid4()))
         st.rerun()  # Force a rerun of the app to immediately reflect the change
 
-    # Display the range settings and filter settings for all filters
-    # st.write("## Summary of Selected Settings")
-    # for i, (custom_df_column, selected_range) in enumerate(zip(all_custom_df_columns, all_selected_ranges), start=1):
-    #     st.write(f"### Filter #{i}")
-    #     st.write(f"**Custom df_column:** {custom_df_column}")
-    #     st.write(f"**Selected Range:** {selected_range[0]:.2f} to {selected_range[1]:.2f}")
+    # Extract the list of filtered IDs
+    short_list_ids = filtered_df["id"].tolist()
+    st.dataframe(short_list_ids)
 
-    st.write("## 2. Sort by:")
-    custom_df_column = create_custom_df_column(st.session_state.sort_id)
-    st.write("(or click on column name to manually sort, below)")
+    # Filter the rows in corr_df
+    df_filtered_rows = corr_df[corr_df["id"].isin(short_list_ids)]
+    st.dataframe(df_filtered_rows)
 
-    # Display the filtered DataFrame or a summary
-    st.write("## 3. Select one:")
-
-    # Reset the index of the DataFrame and then display it without the index column
-    sorted_df = filtered_df.sort_values(by=custom_df_column, ascending=False)
+    # filter the columns to keep only those in 'short_list_ids'
+    sorted_df = df_filtered_rows
+    if len(user_algo_id) == 20:
+        sorted_df = df_filtered_rows[user_algo_id]
 
     # Configure the grid options
     gb = GridOptionsBuilder.from_dataframe(sorted_df.reset_index(drop=True))
