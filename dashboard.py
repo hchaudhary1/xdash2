@@ -4,6 +4,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 from simple_screener import simple_screener_page
 from tearsheet import single_tearsheet
+from correlation import correlation_page
 
 st.set_page_config(layout="wide")
 
@@ -51,6 +52,7 @@ PAGES = {
     "Simple Selector": simple_screener_page,
     "Advacned Explorer": data_explorer_page,
     "Single ID QuantStat": single_tearsheet,
+    "Correlation": correlation_page,
 }
 
 selection = st.sidebar.radio("Navigation:", list(PAGES.keys()))
