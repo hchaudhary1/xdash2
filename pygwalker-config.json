@@ -6,12 +6,13 @@
                 "auto"
             ],
             "coordSystem": "generic",
-            "limit": -1
+            "limit": -1,
+            "timezoneDisplayOffset": 0
         },
         "encodings": {
             "dimensions": [
                 {
-                    "dragId": "gw_IOrb",
+                    "dragId": "gw_tt6y",
                     "fid": "id",
                     "name": "id",
                     "basename": "id",
@@ -19,18 +20,18 @@
                     "analyticType": "dimension"
                 },
                 {
-                    "dragId": "gw_Qc9G",
-                    "fid": "info_start_date",
-                    "name": "info_start_date",
-                    "basename": "info_start_date",
+                    "dragId": "gw_LG5c",
+                    "fid": "algo_start_date",
+                    "name": "algo_start_date",
+                    "basename": "algo_start_date",
                     "semanticType": "temporal",
                     "analyticType": "dimension"
                 },
                 {
-                    "dragId": "gw_-kjo",
-                    "fid": "info_live_date",
-                    "name": "info_live_date",
-                    "basename": "info_live_date",
+                    "dragId": "gw_FZSk",
+                    "fid": "algo_live_date",
+                    "name": "algo_live_date",
+                    "basename": "algo_live_date",
                     "semanticType": "temporal",
                     "analyticType": "dimension"
                 },
@@ -44,16 +45,16 @@
             ],
             "measures": [
                 {
-                    "dragId": "gw_1SHl",
-                    "fid": "info_size",
-                    "name": "info_size",
-                    "basename": "info_size",
+                    "dragId": "gw_XVvK",
+                    "fid": "algo_size",
+                    "name": "algo_size",
+                    "basename": "algo_size",
                     "analyticType": "measure",
                     "semanticType": "quantitative",
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_Qa8h",
+                    "dragId": "gw_IzYr",
                     "fid": "Calmar_AfterLive_01mo",
                     "name": "Calmar_AfterLive_01mo",
                     "basename": "Calmar_AfterLive_01mo",
@@ -62,7 +63,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_2TbC",
+                    "dragId": "gw_cT1p",
                     "fid": "Calmar_AfterLive_03mo",
                     "name": "Calmar_AfterLive_03mo",
                     "basename": "Calmar_AfterLive_03mo",
@@ -71,7 +72,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_kNZB",
+                    "dragId": "gw_RMwI",
                     "fid": "Calmar_AfterLive_06mo",
                     "name": "Calmar_AfterLive_06mo",
                     "basename": "Calmar_AfterLive_06mo",
@@ -80,7 +81,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_7oS3",
+                    "dragId": "gw_crRt",
                     "fid": "Calmar_AfterLive_12mo",
                     "name": "Calmar_AfterLive_12mo",
                     "basename": "Calmar_AfterLive_12mo",
@@ -89,7 +90,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_8-7b",
+                    "dragId": "gw__cWT",
                     "fid": "Calmar_AfterLive_13moToMax",
                     "name": "Calmar_AfterLive_13moToMax",
                     "basename": "Calmar_AfterLive_13moToMax",
@@ -98,7 +99,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_hoLc",
+                    "dragId": "gw_3F2I",
                     "fid": "Calmar_BeforeLive_01mo",
                     "name": "Calmar_BeforeLive_01mo",
                     "basename": "Calmar_BeforeLive_01mo",
@@ -107,7 +108,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_fazk",
+                    "dragId": "gw_ZyIx",
                     "fid": "Calmar_BeforeLive_03mo",
                     "name": "Calmar_BeforeLive_03mo",
                     "basename": "Calmar_BeforeLive_03mo",
@@ -116,7 +117,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_7631",
+                    "dragId": "gw_Fa6l",
                     "fid": "Calmar_BeforeLive_06mo",
                     "name": "Calmar_BeforeLive_06mo",
                     "basename": "Calmar_BeforeLive_06mo",
@@ -125,7 +126,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_4MEd",
+                    "dragId": "gw_t8aV",
                     "fid": "Calmar_BeforeLive_12mo",
                     "name": "Calmar_BeforeLive_12mo",
                     "basename": "Calmar_BeforeLive_12mo",
@@ -134,7 +135,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_UTGY",
+                    "dragId": "gw_nJgI",
                     "fid": "Calmar_BeforeLive_13moToMax",
                     "name": "Calmar_BeforeLive_13moToMax",
                     "basename": "Calmar_BeforeLive_13moToMax",
@@ -143,7 +144,52 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_6Y-s",
+                    "dragId": "gw_oS5U",
+                    "fid": "Calmar_BeforeToday_01mo",
+                    "name": "Calmar_BeforeToday_01mo",
+                    "basename": "Calmar_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_EYQA",
+                    "fid": "Calmar_BeforeToday_03mo",
+                    "name": "Calmar_BeforeToday_03mo",
+                    "basename": "Calmar_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_NhJu",
+                    "fid": "Calmar_BeforeToday_06mo",
+                    "name": "Calmar_BeforeToday_06mo",
+                    "basename": "Calmar_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_kCel",
+                    "fid": "Calmar_BeforeToday_12mo",
+                    "name": "Calmar_BeforeToday_12mo",
+                    "basename": "Calmar_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_0fA4",
+                    "fid": "Calmar_BeforeToday_13moToMax",
+                    "name": "Calmar_BeforeToday_13moToMax",
+                    "basename": "Calmar_BeforeToday_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_hm3w",
                     "fid": "DayAvgPct_AfterLive_01mo",
                     "name": "DayAvgPct_AfterLive_01mo",
                     "basename": "DayAvgPct_AfterLive_01mo",
@@ -152,7 +198,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_Kbru",
+                    "dragId": "gw__vOc",
                     "fid": "DayAvgPct_AfterLive_03mo",
                     "name": "DayAvgPct_AfterLive_03mo",
                     "basename": "DayAvgPct_AfterLive_03mo",
@@ -161,7 +207,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_NHTy",
+                    "dragId": "gw_IGo6",
                     "fid": "DayAvgPct_AfterLive_06mo",
                     "name": "DayAvgPct_AfterLive_06mo",
                     "basename": "DayAvgPct_AfterLive_06mo",
@@ -170,7 +216,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_iZ_P",
+                    "dragId": "gw_ZQjN",
                     "fid": "DayAvgPct_AfterLive_12mo",
                     "name": "DayAvgPct_AfterLive_12mo",
                     "basename": "DayAvgPct_AfterLive_12mo",
@@ -179,7 +225,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw__Yph",
+                    "dragId": "gw__ZD_",
                     "fid": "DayAvgPct_AfterLive_13moToMax",
                     "name": "DayAvgPct_AfterLive_13moToMax",
                     "basename": "DayAvgPct_AfterLive_13moToMax",
@@ -188,7 +234,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_V7-b",
+                    "dragId": "gw_qyY2",
                     "fid": "DayAvgPct_BeforeLive_01mo",
                     "name": "DayAvgPct_BeforeLive_01mo",
                     "basename": "DayAvgPct_BeforeLive_01mo",
@@ -197,7 +243,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_VAAp",
+                    "dragId": "gw_0Fp1",
                     "fid": "DayAvgPct_BeforeLive_03mo",
                     "name": "DayAvgPct_BeforeLive_03mo",
                     "basename": "DayAvgPct_BeforeLive_03mo",
@@ -206,7 +252,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_E15F",
+                    "dragId": "gw_sFX6",
                     "fid": "DayAvgPct_BeforeLive_06mo",
                     "name": "DayAvgPct_BeforeLive_06mo",
                     "basename": "DayAvgPct_BeforeLive_06mo",
@@ -215,7 +261,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_xjPl",
+                    "dragId": "gw_IVhz",
                     "fid": "DayAvgPct_BeforeLive_12mo",
                     "name": "DayAvgPct_BeforeLive_12mo",
                     "basename": "DayAvgPct_BeforeLive_12mo",
@@ -224,7 +270,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_XJ4z",
+                    "dragId": "gw_G6zi",
                     "fid": "DayAvgPct_BeforeLive_13moToMax",
                     "name": "DayAvgPct_BeforeLive_13moToMax",
                     "basename": "DayAvgPct_BeforeLive_13moToMax",
@@ -233,7 +279,52 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_4mem",
+                    "dragId": "gw_zKCs",
+                    "fid": "DayAvgPct_BeforeToday_01mo",
+                    "name": "DayAvgPct_BeforeToday_01mo",
+                    "basename": "DayAvgPct_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_rFbo",
+                    "fid": "DayAvgPct_BeforeToday_03mo",
+                    "name": "DayAvgPct_BeforeToday_03mo",
+                    "basename": "DayAvgPct_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_RAzc",
+                    "fid": "DayAvgPct_BeforeToday_06mo",
+                    "name": "DayAvgPct_BeforeToday_06mo",
+                    "basename": "DayAvgPct_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_foyo",
+                    "fid": "DayAvgPct_BeforeToday_12mo",
+                    "name": "DayAvgPct_BeforeToday_12mo",
+                    "basename": "DayAvgPct_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_L2zX",
+                    "fid": "DayAvgPct_BeforeToday_13moToMax",
+                    "name": "DayAvgPct_BeforeToday_13moToMax",
+                    "basename": "DayAvgPct_BeforeToday_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_ukNF",
                     "fid": "DayBestPct_AfterLive_01mo",
                     "name": "DayBestPct_AfterLive_01mo",
                     "basename": "DayBestPct_AfterLive_01mo",
@@ -242,7 +333,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_Q-7J",
+                    "dragId": "gw_4dLJ",
                     "fid": "DayBestPct_AfterLive_03mo",
                     "name": "DayBestPct_AfterLive_03mo",
                     "basename": "DayBestPct_AfterLive_03mo",
@@ -251,7 +342,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_-B-V",
+                    "dragId": "gw_B4Y0",
                     "fid": "DayBestPct_AfterLive_06mo",
                     "name": "DayBestPct_AfterLive_06mo",
                     "basename": "DayBestPct_AfterLive_06mo",
@@ -260,7 +351,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_wXRF",
+                    "dragId": "gw_QsCW",
                     "fid": "DayBestPct_AfterLive_12mo",
                     "name": "DayBestPct_AfterLive_12mo",
                     "basename": "DayBestPct_AfterLive_12mo",
@@ -269,7 +360,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw__VAl",
+                    "dragId": "gw_cKAi",
                     "fid": "DayBestPct_AfterLive_13moToMax",
                     "name": "DayBestPct_AfterLive_13moToMax",
                     "basename": "DayBestPct_AfterLive_13moToMax",
@@ -278,7 +369,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_SPP8",
+                    "dragId": "gw_sn3L",
                     "fid": "DayBestPct_BeforeLive_01mo",
                     "name": "DayBestPct_BeforeLive_01mo",
                     "basename": "DayBestPct_BeforeLive_01mo",
@@ -287,7 +378,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_yvKU",
+                    "dragId": "gw_kKuf",
                     "fid": "DayBestPct_BeforeLive_03mo",
                     "name": "DayBestPct_BeforeLive_03mo",
                     "basename": "DayBestPct_BeforeLive_03mo",
@@ -296,7 +387,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_7IYr",
+                    "dragId": "gw_ud_2",
                     "fid": "DayBestPct_BeforeLive_06mo",
                     "name": "DayBestPct_BeforeLive_06mo",
                     "basename": "DayBestPct_BeforeLive_06mo",
@@ -305,7 +396,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_navJ",
+                    "dragId": "gw_HlMq",
                     "fid": "DayBestPct_BeforeLive_12mo",
                     "name": "DayBestPct_BeforeLive_12mo",
                     "basename": "DayBestPct_BeforeLive_12mo",
@@ -314,7 +405,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_zwm0",
+                    "dragId": "gw_BtTK",
                     "fid": "DayBestPct_BeforeLive_13moToMax",
                     "name": "DayBestPct_BeforeLive_13moToMax",
                     "basename": "DayBestPct_BeforeLive_13moToMax",
@@ -323,7 +414,52 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_Z4rs",
+                    "dragId": "gw_xUKe",
+                    "fid": "DayBestPct_BeforeToday_01mo",
+                    "name": "DayBestPct_BeforeToday_01mo",
+                    "basename": "DayBestPct_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_8i9R",
+                    "fid": "DayBestPct_BeforeToday_03mo",
+                    "name": "DayBestPct_BeforeToday_03mo",
+                    "basename": "DayBestPct_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_2Aqv",
+                    "fid": "DayBestPct_BeforeToday_06mo",
+                    "name": "DayBestPct_BeforeToday_06mo",
+                    "basename": "DayBestPct_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_E1JZ",
+                    "fid": "DayBestPct_BeforeToday_12mo",
+                    "name": "DayBestPct_BeforeToday_12mo",
+                    "basename": "DayBestPct_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_uTpi",
+                    "fid": "DayBestPct_BeforeToday_13moToMax",
+                    "name": "DayBestPct_BeforeToday_13moToMax",
+                    "basename": "DayBestPct_BeforeToday_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_Pyyj",
                     "fid": "DayStdDevPct_AfterLive_01mo",
                     "name": "DayStdDevPct_AfterLive_01mo",
                     "basename": "DayStdDevPct_AfterLive_01mo",
@@ -332,7 +468,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_ZVSc",
+                    "dragId": "gw_gCAL",
                     "fid": "DayStdDevPct_AfterLive_03mo",
                     "name": "DayStdDevPct_AfterLive_03mo",
                     "basename": "DayStdDevPct_AfterLive_03mo",
@@ -341,7 +477,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_8wiK",
+                    "dragId": "gw_ISmU",
                     "fid": "DayStdDevPct_AfterLive_06mo",
                     "name": "DayStdDevPct_AfterLive_06mo",
                     "basename": "DayStdDevPct_AfterLive_06mo",
@@ -350,7 +486,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_RAhw",
+                    "dragId": "gw_Fw2C",
                     "fid": "DayStdDevPct_AfterLive_12mo",
                     "name": "DayStdDevPct_AfterLive_12mo",
                     "basename": "DayStdDevPct_AfterLive_12mo",
@@ -359,7 +495,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_n20c",
+                    "dragId": "gw_4YgI",
                     "fid": "DayStdDevPct_AfterLive_13moToMax",
                     "name": "DayStdDevPct_AfterLive_13moToMax",
                     "basename": "DayStdDevPct_AfterLive_13moToMax",
@@ -368,7 +504,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_ZCew",
+                    "dragId": "gw_eiyk",
                     "fid": "DayStdDevPct_BeforeLive_01mo",
                     "name": "DayStdDevPct_BeforeLive_01mo",
                     "basename": "DayStdDevPct_BeforeLive_01mo",
@@ -377,7 +513,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_GvG8",
+                    "dragId": "gw_x3rT",
                     "fid": "DayStdDevPct_BeforeLive_03mo",
                     "name": "DayStdDevPct_BeforeLive_03mo",
                     "basename": "DayStdDevPct_BeforeLive_03mo",
@@ -386,7 +522,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_-kXP",
+                    "dragId": "gw_Ixch",
                     "fid": "DayStdDevPct_BeforeLive_06mo",
                     "name": "DayStdDevPct_BeforeLive_06mo",
                     "basename": "DayStdDevPct_BeforeLive_06mo",
@@ -395,7 +531,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_dYTn",
+                    "dragId": "gw_CxnU",
                     "fid": "DayStdDevPct_BeforeLive_12mo",
                     "name": "DayStdDevPct_BeforeLive_12mo",
                     "basename": "DayStdDevPct_BeforeLive_12mo",
@@ -404,7 +540,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_VwS4",
+                    "dragId": "gw_ehOe",
                     "fid": "DayStdDevPct_BeforeLive_13moToMax",
                     "name": "DayStdDevPct_BeforeLive_13moToMax",
                     "basename": "DayStdDevPct_BeforeLive_13moToMax",
@@ -413,7 +549,52 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_zDMP",
+                    "dragId": "gw_Vc2J",
+                    "fid": "DayStdDevPct_BeforeToday_01mo",
+                    "name": "DayStdDevPct_BeforeToday_01mo",
+                    "basename": "DayStdDevPct_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_jn0X",
+                    "fid": "DayStdDevPct_BeforeToday_03mo",
+                    "name": "DayStdDevPct_BeforeToday_03mo",
+                    "basename": "DayStdDevPct_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw__1qX",
+                    "fid": "DayStdDevPct_BeforeToday_06mo",
+                    "name": "DayStdDevPct_BeforeToday_06mo",
+                    "basename": "DayStdDevPct_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_kTYb",
+                    "fid": "DayStdDevPct_BeforeToday_12mo",
+                    "name": "DayStdDevPct_BeforeToday_12mo",
+                    "basename": "DayStdDevPct_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_U2rS",
+                    "fid": "DayStdDevPct_BeforeToday_13moToMax",
+                    "name": "DayStdDevPct_BeforeToday_13moToMax",
+                    "basename": "DayStdDevPct_BeforeToday_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_9rSY",
                     "fid": "DayWorstPct_AfterLive_01mo",
                     "name": "DayWorstPct_AfterLive_01mo",
                     "basename": "DayWorstPct_AfterLive_01mo",
@@ -422,7 +603,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_PutV",
+                    "dragId": "gw_j1sv",
                     "fid": "DayWorstPct_AfterLive_03mo",
                     "name": "DayWorstPct_AfterLive_03mo",
                     "basename": "DayWorstPct_AfterLive_03mo",
@@ -431,7 +612,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_d-YL",
+                    "dragId": "gw_n93q",
                     "fid": "DayWorstPct_AfterLive_06mo",
                     "name": "DayWorstPct_AfterLive_06mo",
                     "basename": "DayWorstPct_AfterLive_06mo",
@@ -440,7 +621,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_EqmH",
+                    "dragId": "gw_0OQy",
                     "fid": "DayWorstPct_AfterLive_12mo",
                     "name": "DayWorstPct_AfterLive_12mo",
                     "basename": "DayWorstPct_AfterLive_12mo",
@@ -449,7 +630,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_fqft",
+                    "dragId": "gw_QMYi",
                     "fid": "DayWorstPct_AfterLive_13moToMax",
                     "name": "DayWorstPct_AfterLive_13moToMax",
                     "basename": "DayWorstPct_AfterLive_13moToMax",
@@ -458,7 +639,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_jWCm",
+                    "dragId": "gw_WVRj",
                     "fid": "DayWorstPct_BeforeLive_01mo",
                     "name": "DayWorstPct_BeforeLive_01mo",
                     "basename": "DayWorstPct_BeforeLive_01mo",
@@ -467,7 +648,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw__HDO",
+                    "dragId": "gw_YGg0",
                     "fid": "DayWorstPct_BeforeLive_03mo",
                     "name": "DayWorstPct_BeforeLive_03mo",
                     "basename": "DayWorstPct_BeforeLive_03mo",
@@ -476,7 +657,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_g6EQ",
+                    "dragId": "gw_hu4K",
                     "fid": "DayWorstPct_BeforeLive_06mo",
                     "name": "DayWorstPct_BeforeLive_06mo",
                     "basename": "DayWorstPct_BeforeLive_06mo",
@@ -485,7 +666,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_U5Am",
+                    "dragId": "gw_Lg0I",
                     "fid": "DayWorstPct_BeforeLive_12mo",
                     "name": "DayWorstPct_BeforeLive_12mo",
                     "basename": "DayWorstPct_BeforeLive_12mo",
@@ -494,7 +675,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_7yoy",
+                    "dragId": "gw_lBhX",
                     "fid": "DayWorstPct_BeforeLive_13moToMax",
                     "name": "DayWorstPct_BeforeLive_13moToMax",
                     "basename": "DayWorstPct_BeforeLive_13moToMax",
@@ -503,7 +684,52 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_ekFc",
+                    "dragId": "gw_gfLP",
+                    "fid": "DayWorstPct_BeforeToday_01mo",
+                    "name": "DayWorstPct_BeforeToday_01mo",
+                    "basename": "DayWorstPct_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_Q8kn",
+                    "fid": "DayWorstPct_BeforeToday_03mo",
+                    "name": "DayWorstPct_BeforeToday_03mo",
+                    "basename": "DayWorstPct_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_B6yR",
+                    "fid": "DayWorstPct_BeforeToday_06mo",
+                    "name": "DayWorstPct_BeforeToday_06mo",
+                    "basename": "DayWorstPct_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_hDsA",
+                    "fid": "DayWorstPct_BeforeToday_12mo",
+                    "name": "DayWorstPct_BeforeToday_12mo",
+                    "basename": "DayWorstPct_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_7ZKf",
+                    "fid": "DayWorstPct_BeforeToday_13moToMax",
+                    "name": "DayWorstPct_BeforeToday_13moToMax",
+                    "basename": "DayWorstPct_BeforeToday_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_CNkm",
                     "fid": "DrawdownMaxPct_AfterLive_01mo",
                     "name": "DrawdownMaxPct_AfterLive_01mo",
                     "basename": "DrawdownMaxPct_AfterLive_01mo",
@@ -512,7 +738,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_pvEg",
+                    "dragId": "gw_OV4e",
                     "fid": "DrawdownMaxPct_AfterLive_03mo",
                     "name": "DrawdownMaxPct_AfterLive_03mo",
                     "basename": "DrawdownMaxPct_AfterLive_03mo",
@@ -521,7 +747,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_J2SM",
+                    "dragId": "gw_v8hW",
                     "fid": "DrawdownMaxPct_AfterLive_06mo",
                     "name": "DrawdownMaxPct_AfterLive_06mo",
                     "basename": "DrawdownMaxPct_AfterLive_06mo",
@@ -530,7 +756,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_ERVP",
+                    "dragId": "gw_DkDT",
                     "fid": "DrawdownMaxPct_AfterLive_12mo",
                     "name": "DrawdownMaxPct_AfterLive_12mo",
                     "basename": "DrawdownMaxPct_AfterLive_12mo",
@@ -539,7 +765,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_jozP",
+                    "dragId": "gw_m92o",
                     "fid": "DrawdownMaxPct_AfterLive_13moToMax",
                     "name": "DrawdownMaxPct_AfterLive_13moToMax",
                     "basename": "DrawdownMaxPct_AfterLive_13moToMax",
@@ -548,7 +774,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_QP2T",
+                    "dragId": "gw_KCfJ",
                     "fid": "DrawdownMaxPct_BeforeLive_01mo",
                     "name": "DrawdownMaxPct_BeforeLive_01mo",
                     "basename": "DrawdownMaxPct_BeforeLive_01mo",
@@ -557,7 +783,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_KY6m",
+                    "dragId": "gw_G5PM",
                     "fid": "DrawdownMaxPct_BeforeLive_03mo",
                     "name": "DrawdownMaxPct_BeforeLive_03mo",
                     "basename": "DrawdownMaxPct_BeforeLive_03mo",
@@ -566,7 +792,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_G1dz",
+                    "dragId": "gw_unK3",
                     "fid": "DrawdownMaxPct_BeforeLive_06mo",
                     "name": "DrawdownMaxPct_BeforeLive_06mo",
                     "basename": "DrawdownMaxPct_BeforeLive_06mo",
@@ -575,7 +801,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_UQe6",
+                    "dragId": "gw_ldoN",
                     "fid": "DrawdownMaxPct_BeforeLive_12mo",
                     "name": "DrawdownMaxPct_BeforeLive_12mo",
                     "basename": "DrawdownMaxPct_BeforeLive_12mo",
@@ -584,7 +810,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_i-pn",
+                    "dragId": "gw_p5k7",
                     "fid": "DrawdownMaxPct_BeforeLive_13moToMax",
                     "name": "DrawdownMaxPct_BeforeLive_13moToMax",
                     "basename": "DrawdownMaxPct_BeforeLive_13moToMax",
@@ -593,7 +819,52 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_GfiU",
+                    "dragId": "gw_21u2",
+                    "fid": "DrawdownMaxPct_BeforeToday_01mo",
+                    "name": "DrawdownMaxPct_BeforeToday_01mo",
+                    "basename": "DrawdownMaxPct_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_oml1",
+                    "fid": "DrawdownMaxPct_BeforeToday_03mo",
+                    "name": "DrawdownMaxPct_BeforeToday_03mo",
+                    "basename": "DrawdownMaxPct_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_PLgB",
+                    "fid": "DrawdownMaxPct_BeforeToday_06mo",
+                    "name": "DrawdownMaxPct_BeforeToday_06mo",
+                    "basename": "DrawdownMaxPct_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_u_D6",
+                    "fid": "DrawdownMaxPct_BeforeToday_12mo",
+                    "name": "DrawdownMaxPct_BeforeToday_12mo",
+                    "basename": "DrawdownMaxPct_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_a2-C",
+                    "fid": "DrawdownMaxPct_BeforeToday_13moToMax",
+                    "name": "DrawdownMaxPct_BeforeToday_13moToMax",
+                    "basename": "DrawdownMaxPct_BeforeToday_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_gsg3",
                     "fid": "GainAnnualizedPct_AfterLive_01mo",
                     "name": "GainAnnualizedPct_AfterLive_01mo",
                     "basename": "GainAnnualizedPct_AfterLive_01mo",
@@ -602,7 +873,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_btkc",
+                    "dragId": "gw_ZK6D",
                     "fid": "GainAnnualizedPct_AfterLive_03mo",
                     "name": "GainAnnualizedPct_AfterLive_03mo",
                     "basename": "GainAnnualizedPct_AfterLive_03mo",
@@ -611,7 +882,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_syml",
+                    "dragId": "gw_o5vX",
                     "fid": "GainAnnualizedPct_AfterLive_06mo",
                     "name": "GainAnnualizedPct_AfterLive_06mo",
                     "basename": "GainAnnualizedPct_AfterLive_06mo",
@@ -620,7 +891,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_j2SR",
+                    "dragId": "gw_ZVSF",
                     "fid": "GainAnnualizedPct_AfterLive_12mo",
                     "name": "GainAnnualizedPct_AfterLive_12mo",
                     "basename": "GainAnnualizedPct_AfterLive_12mo",
@@ -629,7 +900,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_kZe_",
+                    "dragId": "gw_RJ4v",
                     "fid": "GainAnnualizedPct_AfterLive_13moToMax",
                     "name": "GainAnnualizedPct_AfterLive_13moToMax",
                     "basename": "GainAnnualizedPct_AfterLive_13moToMax",
@@ -638,7 +909,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_VNa4",
+                    "dragId": "gw_ZJCU",
                     "fid": "GainAnnualizedPct_BeforeLive_01mo",
                     "name": "GainAnnualizedPct_BeforeLive_01mo",
                     "basename": "GainAnnualizedPct_BeforeLive_01mo",
@@ -647,7 +918,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_Qi0-",
+                    "dragId": "gw_YNau",
                     "fid": "GainAnnualizedPct_BeforeLive_03mo",
                     "name": "GainAnnualizedPct_BeforeLive_03mo",
                     "basename": "GainAnnualizedPct_BeforeLive_03mo",
@@ -656,7 +927,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_qdp4",
+                    "dragId": "gw_tU3I",
                     "fid": "GainAnnualizedPct_BeforeLive_06mo",
                     "name": "GainAnnualizedPct_BeforeLive_06mo",
                     "basename": "GainAnnualizedPct_BeforeLive_06mo",
@@ -665,7 +936,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_jYAq",
+                    "dragId": "gw_KK6y",
                     "fid": "GainAnnualizedPct_BeforeLive_12mo",
                     "name": "GainAnnualizedPct_BeforeLive_12mo",
                     "basename": "GainAnnualizedPct_BeforeLive_12mo",
@@ -674,7 +945,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_ym6w",
+                    "dragId": "gw_goLI",
                     "fid": "GainAnnualizedPct_BeforeLive_13moToMax",
                     "name": "GainAnnualizedPct_BeforeLive_13moToMax",
                     "basename": "GainAnnualizedPct_BeforeLive_13moToMax",
@@ -683,7 +954,52 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_Okza",
+                    "dragId": "gw_OaFE",
+                    "fid": "GainAnnualizedPct_BeforeToday_01mo",
+                    "name": "GainAnnualizedPct_BeforeToday_01mo",
+                    "basename": "GainAnnualizedPct_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_zRYb",
+                    "fid": "GainAnnualizedPct_BeforeToday_03mo",
+                    "name": "GainAnnualizedPct_BeforeToday_03mo",
+                    "basename": "GainAnnualizedPct_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_bms8",
+                    "fid": "GainAnnualizedPct_BeforeToday_06mo",
+                    "name": "GainAnnualizedPct_BeforeToday_06mo",
+                    "basename": "GainAnnualizedPct_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_Mhtw",
+                    "fid": "GainAnnualizedPct_BeforeToday_12mo",
+                    "name": "GainAnnualizedPct_BeforeToday_12mo",
+                    "basename": "GainAnnualizedPct_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_ABSX",
+                    "fid": "GainAnnualizedPct_BeforeToday_13moToMax",
+                    "name": "GainAnnualizedPct_BeforeToday_13moToMax",
+                    "basename": "GainAnnualizedPct_BeforeToday_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_1yfl",
                     "fid": "GainTotalPct_AfterLive_01mo",
                     "name": "GainTotalPct_AfterLive_01mo",
                     "basename": "GainTotalPct_AfterLive_01mo",
@@ -692,7 +1008,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_QuEP",
+                    "dragId": "gw_yJtZ",
                     "fid": "GainTotalPct_AfterLive_03mo",
                     "name": "GainTotalPct_AfterLive_03mo",
                     "basename": "GainTotalPct_AfterLive_03mo",
@@ -701,7 +1017,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_NKOT",
+                    "dragId": "gw_h2O4",
                     "fid": "GainTotalPct_AfterLive_06mo",
                     "name": "GainTotalPct_AfterLive_06mo",
                     "basename": "GainTotalPct_AfterLive_06mo",
@@ -710,7 +1026,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_1Qku",
+                    "dragId": "gw_MZ0f",
                     "fid": "GainTotalPct_AfterLive_12mo",
                     "name": "GainTotalPct_AfterLive_12mo",
                     "basename": "GainTotalPct_AfterLive_12mo",
@@ -719,7 +1035,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_R5nz",
+                    "dragId": "gw_AC2_",
                     "fid": "GainTotalPct_AfterLive_13moToMax",
                     "name": "GainTotalPct_AfterLive_13moToMax",
                     "basename": "GainTotalPct_AfterLive_13moToMax",
@@ -728,7 +1044,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_IsBR",
+                    "dragId": "gw_r2ds",
                     "fid": "GainTotalPct_BeforeLive_01mo",
                     "name": "GainTotalPct_BeforeLive_01mo",
                     "basename": "GainTotalPct_BeforeLive_01mo",
@@ -737,7 +1053,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_UcVK",
+                    "dragId": "gw_mMab",
                     "fid": "GainTotalPct_BeforeLive_03mo",
                     "name": "GainTotalPct_BeforeLive_03mo",
                     "basename": "GainTotalPct_BeforeLive_03mo",
@@ -746,7 +1062,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_Fhd5",
+                    "dragId": "gw_wWeH",
                     "fid": "GainTotalPct_BeforeLive_06mo",
                     "name": "GainTotalPct_BeforeLive_06mo",
                     "basename": "GainTotalPct_BeforeLive_06mo",
@@ -755,7 +1071,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_UKg_",
+                    "dragId": "gw_63_F",
                     "fid": "GainTotalPct_BeforeLive_12mo",
                     "name": "GainTotalPct_BeforeLive_12mo",
                     "basename": "GainTotalPct_BeforeLive_12mo",
@@ -764,7 +1080,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_c9H7",
+                    "dragId": "gw_E6U5",
                     "fid": "GainTotalPct_BeforeLive_13moToMax",
                     "name": "GainTotalPct_BeforeLive_13moToMax",
                     "basename": "GainTotalPct_BeforeLive_13moToMax",
@@ -773,7 +1089,52 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_qyRw",
+                    "dragId": "gw_lZlw",
+                    "fid": "GainTotalPct_BeforeToday_01mo",
+                    "name": "GainTotalPct_BeforeToday_01mo",
+                    "basename": "GainTotalPct_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_bVvT",
+                    "fid": "GainTotalPct_BeforeToday_03mo",
+                    "name": "GainTotalPct_BeforeToday_03mo",
+                    "basename": "GainTotalPct_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_0gd7",
+                    "fid": "GainTotalPct_BeforeToday_06mo",
+                    "name": "GainTotalPct_BeforeToday_06mo",
+                    "basename": "GainTotalPct_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw__7Ni",
+                    "fid": "GainTotalPct_BeforeToday_12mo",
+                    "name": "GainTotalPct_BeforeToday_12mo",
+                    "basename": "GainTotalPct_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_CKj_",
+                    "fid": "GainTotalPct_BeforeToday_13moToMax",
+                    "name": "GainTotalPct_BeforeToday_13moToMax",
+                    "basename": "GainTotalPct_BeforeToday_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_E96B",
                     "fid": "Sharpe_AfterLive_01mo",
                     "name": "Sharpe_AfterLive_01mo",
                     "basename": "Sharpe_AfterLive_01mo",
@@ -782,7 +1143,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_U4Hb",
+                    "dragId": "gw_5gaT",
                     "fid": "Sharpe_AfterLive_03mo",
                     "name": "Sharpe_AfterLive_03mo",
                     "basename": "Sharpe_AfterLive_03mo",
@@ -791,7 +1152,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_7JcH",
+                    "dragId": "gw__0V0",
                     "fid": "Sharpe_AfterLive_06mo",
                     "name": "Sharpe_AfterLive_06mo",
                     "basename": "Sharpe_AfterLive_06mo",
@@ -800,7 +1161,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_sSbN",
+                    "dragId": "gw_o_bk",
                     "fid": "Sharpe_AfterLive_12mo",
                     "name": "Sharpe_AfterLive_12mo",
                     "basename": "Sharpe_AfterLive_12mo",
@@ -809,7 +1170,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_ArKH",
+                    "dragId": "gw_xD_6",
                     "fid": "Sharpe_AfterLive_13moToMax",
                     "name": "Sharpe_AfterLive_13moToMax",
                     "basename": "Sharpe_AfterLive_13moToMax",
@@ -818,7 +1179,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_kHRx",
+                    "dragId": "gw_1rrg",
                     "fid": "Sharpe_BeforeLive_01mo",
                     "name": "Sharpe_BeforeLive_01mo",
                     "basename": "Sharpe_BeforeLive_01mo",
@@ -827,7 +1188,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_AuqR",
+                    "dragId": "gw_nUJS",
                     "fid": "Sharpe_BeforeLive_03mo",
                     "name": "Sharpe_BeforeLive_03mo",
                     "basename": "Sharpe_BeforeLive_03mo",
@@ -836,7 +1197,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_sSKc",
+                    "dragId": "gw_fHvq",
                     "fid": "Sharpe_BeforeLive_06mo",
                     "name": "Sharpe_BeforeLive_06mo",
                     "basename": "Sharpe_BeforeLive_06mo",
@@ -845,7 +1206,7 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_h5mk",
+                    "dragId": "gw_TMsq",
                     "fid": "Sharpe_BeforeLive_12mo",
                     "name": "Sharpe_BeforeLive_12mo",
                     "basename": "Sharpe_BeforeLive_12mo",
@@ -854,10 +1215,55 @@
                     "aggName": "sum"
                 },
                 {
-                    "dragId": "gw_dxjz",
+                    "dragId": "gw_AFV0",
                     "fid": "Sharpe_BeforeLive_13moToMax",
                     "name": "Sharpe_BeforeLive_13moToMax",
                     "basename": "Sharpe_BeforeLive_13moToMax",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_Leoy",
+                    "fid": "Sharpe_BeforeToday_01mo",
+                    "name": "Sharpe_BeforeToday_01mo",
+                    "basename": "Sharpe_BeforeToday_01mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_u0mu",
+                    "fid": "Sharpe_BeforeToday_03mo",
+                    "name": "Sharpe_BeforeToday_03mo",
+                    "basename": "Sharpe_BeforeToday_03mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_ITaX",
+                    "fid": "Sharpe_BeforeToday_06mo",
+                    "name": "Sharpe_BeforeToday_06mo",
+                    "basename": "Sharpe_BeforeToday_06mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_bHy0",
+                    "fid": "Sharpe_BeforeToday_12mo",
+                    "name": "Sharpe_BeforeToday_12mo",
+                    "basename": "Sharpe_BeforeToday_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw__KXe",
+                    "fid": "Sharpe_BeforeToday_13moToMax",
+                    "name": "Sharpe_BeforeToday_13moToMax",
+                    "basename": "Sharpe_BeforeToday_13moToMax",
                     "analyticType": "measure",
                     "semanticType": "quantitative",
                     "aggName": "sum"
@@ -887,10 +1293,10 @@
             ],
             "rows": [
                 {
-                    "dragId": "gw_Sj6w",
-                    "fid": "Sharpe_BeforeLive_03mo",
-                    "name": "Sharpe_BeforeLive_03mo",
-                    "basename": "Sharpe_BeforeLive_03mo",
+                    "dragId": "gw_HZsK",
+                    "fid": "Sharpe_BeforeLive_12mo",
+                    "name": "Sharpe_BeforeLive_12mo",
+                    "basename": "Sharpe_BeforeLive_12mo",
                     "analyticType": "measure",
                     "semanticType": "quantitative",
                     "aggName": "sum"
@@ -898,10 +1304,19 @@
             ],
             "columns": [
                 {
-                    "dragId": "gw_BfGk",
-                    "fid": "Sharpe_AfterLive_03mo",
-                    "name": "Sharpe_AfterLive_03mo",
-                    "basename": "Sharpe_AfterLive_03mo",
+                    "dragId": "gw_V3po",
+                    "fid": "Sharpe_AfterLive_12mo",
+                    "name": "Sharpe_AfterLive_12mo",
+                    "basename": "Sharpe_AfterLive_12mo",
+                    "analyticType": "measure",
+                    "semanticType": "quantitative",
+                    "aggName": "sum"
+                },
+                {
+                    "dragId": "gw_9HD6",
+                    "fid": "Calmar_AfterLive_13moToMax",
+                    "name": "Calmar_AfterLive_13moToMax",
+                    "basename": "Calmar_AfterLive_13moToMax",
                     "analyticType": "measure",
                     "semanticType": "quantitative",
                     "aggName": "sum"
@@ -909,10 +1324,10 @@
             ],
             "color": [
                 {
-                    "dragId": "gw_UxyK",
-                    "fid": "info_size",
-                    "name": "info_size",
-                    "basename": "info_size",
+                    "dragId": "gw_fmMg",
+                    "fid": "algo_size",
+                    "name": "algo_size",
+                    "basename": "algo_size",
                     "analyticType": "measure",
                     "semanticType": "quantitative",
                     "aggName": "sum"
@@ -921,10 +1336,10 @@
             "opacity": [],
             "size": [
                 {
-                    "dragId": "gw_0D7H",
-                    "fid": "GainTotalPct_AfterLive_03mo",
-                    "name": "GainTotalPct_AfterLive_03mo",
-                    "basename": "GainTotalPct_AfterLive_03mo",
+                    "dragId": "gw_okZu",
+                    "fid": "Calmar_BeforeToday_13moToMax",
+                    "name": "Calmar_BeforeToday_13moToMax",
+                    "basename": "Calmar_BeforeToday_13moToMax",
                     "analyticType": "measure",
                     "semanticType": "quantitative",
                     "aggName": "sum"
@@ -938,7 +1353,7 @@
             "geoId": [],
             "details": [
                 {
-                    "dragId": "gw_ZW3B",
+                    "dragId": "gw_g-_4",
                     "fid": "id",
                     "name": "id",
                     "basename": "id",
@@ -948,10 +1363,10 @@
             ],
             "filters": [
                 {
-                    "dragId": "gw_BEF-",
-                    "fid": "Sharpe_AfterLive_03mo",
-                    "name": "Sharpe_AfterLive_03mo",
-                    "basename": "Sharpe_AfterLive_03mo",
+                    "dragId": "gw_1cca",
+                    "fid": "Sharpe_AfterLive_12mo",
+                    "name": "Sharpe_AfterLive_12mo",
+                    "basename": "Sharpe_AfterLive_12mo",
                     "analyticType": "measure",
                     "semanticType": "quantitative",
                     "aggName": "sum",
@@ -959,15 +1374,15 @@
                         "type": "range",
                         "value": [
                             0,
-                            6
+                            3
                         ]
                     }
                 },
                 {
-                    "dragId": "gw_gWLZ",
-                    "fid": "Sharpe_BeforeLive_03mo",
-                    "name": "Sharpe_BeforeLive_03mo",
-                    "basename": "Sharpe_BeforeLive_03mo",
+                    "dragId": "gw_hmPQ",
+                    "fid": "Sharpe_BeforeLive_12mo",
+                    "name": "Sharpe_BeforeLive_12mo",
+                    "basename": "Sharpe_BeforeLive_12mo",
                     "analyticType": "measure",
                     "semanticType": "quantitative",
                     "aggName": "sum",
@@ -975,7 +1390,7 @@
                         "type": "range",
                         "value": [
                             0,
-                            6
+                            8
                         ]
                     }
                 }
@@ -986,7 +1401,7 @@
             "showActions": false,
             "showTableSummary": false,
             "stack": "stack",
-            "interactiveScale": false,
+            "interactiveScale": true,
             "zeroScale": true,
             "size": {
                 "mode": "full",
@@ -1004,7 +1419,7 @@
                 "size": false
             }
         },
-        "visId": "gw_g2ma",
-        "name": "Chart 1"
+        "visId": "gw_CeJO",
+        "name": "Example"
     }
 ]
