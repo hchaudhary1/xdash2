@@ -325,9 +325,9 @@ def get_symph_dates():
     symphony_ids = get_symphony_list("2024-feb-25.csv")
     df = pd.DataFrame(symphony_ids, columns=["id"])
 
-    df.loc[:, "info_size"] = None
-    df.loc[:, "info_start_date"] = None
-    df.loc[:, "info_live_date"] = None
+    df.loc[:, "algo_size"] = None
+    df.loc[:, "algo_start_date"] = None
+    df.loc[:, "algo_live_date"] = None
 
     df = df.head(100)
 
@@ -342,9 +342,9 @@ def get_symph_dates():
             return None
 
         row_dict = row._asdict()
-        row_dict["info_live_date"] = live_start_date
-        row_dict["info_start_date"] = epoch_days_to_date(min_date)
-        row_dict["info_size"] = get_size_of_symphony(symphony_id)
+        row_dict["algo_live_date"] = live_start_date
+        row_dict["algo_start_date"] = epoch_days_to_date(min_date)
+        row_dict["algo_size"] = get_size_of_symphony(symphony_id)
         return row_dict
 
     with ThreadPoolExecutor() as executor:
@@ -352,12 +352,12 @@ def get_symph_dates():
             executor.map(process_row, df.itertuples(index=False))
         ):
             if row is not None:
-                df.at[index, "info_size"] = row["info_size"]
-                df.at[index, "info_start_date"] = row["info_start_date"]
-                df.at[index, "info_live_date"] = row["info_live_date"]
+                df.at[index, "algo_size"] = row["algo_size"]
+                df.at[index, "algo_start_date"] = row["algo_start_date"]
+                df.at[index, "algo_live_date"] = row["algo_live_date"]
 
-    df = df.dropna(subset=["info_live_date"])
-    df = df.dropna(subset=["info_start_date"])
+    df = df.dropna(subset=["algo_live_date"])
+    df = df.dropna(subset=["algo_start_date"])
     return df
 
 
@@ -423,8 +423,8 @@ def process_row(row):
     results[row["id"]] = row["id"]
 
     # dates
-    live_date = pd.to_datetime(row["info_live_date"]).date()
-    start_date = pd.to_datetime(row["info_start_date"]).date()
+    live_date = pd.to_datetime(row["algo_live_date"]).date()
+    start_date = pd.to_datetime(row["algo_start_date"]).date()
 
     for era_prefix in era_prefixes:
         bt_start = None
@@ -487,7 +487,7 @@ def main():
     df = get_symph_dates()
     before_live(df)
 
-    first_columns = ["id", "info_size", "info_start_date", "info_live_date"]
+    first_columns = ["id", "algo_size", "algo_start_date", "algo_live_date"]
     remaining_columns = sorted([col for col in df.columns if col not in first_columns])
     new_order = first_columns + remaining_columns
     df = df[new_order]
