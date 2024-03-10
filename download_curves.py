@@ -10,7 +10,7 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# names -- must be kept int this order
+# names -- must be kept in this order
 era_prefixes = [
     "AfterLive",
     "BeforeLive",
@@ -132,12 +132,15 @@ def single_backtest(symph_id, start_date, end_date, max_retries=3, use_stored=Tr
                 time.sleep(1)  # Add a small delay before retrying
             else:
                 v_print(f"Maximum retries ({max_retries}) reached. Aborting.")
-                return None
+                break
         except Exception as e:
             v_print(
                 f"An unexpected error occurred during backtest for id {symph_id}: {e}"
             )
-            return None
+            break
+
+    v_print(f"error at {file_name}")
+    return None
 
 
 def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
@@ -377,7 +380,7 @@ def get_era_dates(era, data_begin, live_date, delta_days, isBeyondDelta=False):
             bt_start = era_date_mark
             bt_end = live_date
             if isBeyondDelta:
-                bt_start = data_begin
+                bt_start = DATE_1990
     elif era == era_prefixes[2]:  # BeforeToday
         era_date_mark = DATE_TODAY - datetime.timedelta(days=delta_days)
         # assumes algos are pre-filtered and running live today
@@ -386,7 +389,7 @@ def get_era_dates(era, data_begin, live_date, delta_days, isBeyondDelta=False):
             bt_start = era_date_mark
             bt_end = DATE_TODAY
             if isBeyondDelta:
-                bt_end = data_begin
+                bt_start = DATE_1990
     else:
         v_print("UNKNOWN ENUM")
 
