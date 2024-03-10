@@ -62,6 +62,7 @@ def create_custom_df_column(unique_id):
     era = [
         "AfterLive",
         "BeforeLive",
+        "BeforeToday",
     ]
 
     interval = [
@@ -166,7 +167,7 @@ def simple_screener_page():
     st.write("(or click on column name to manually sort, below)")
 
     # Display the filtered DataFrame or a summary
-    st.write("## 3. Select 1 from filtered list:")
+    st.write("## 3. Select one:")
 
     # Reset the index of the DataFrame and then display it without the index column
     sorted_df = filtered_df.sort_values(by=custom_df_column, ascending=False)
