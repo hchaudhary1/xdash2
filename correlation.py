@@ -1,9 +1,18 @@
 import numpy as np
+import os
 import pandas as pd
 import streamlit as st
 import uuid
 from st_aggrid import AgGrid, GridOptionsBuilder
 from tearsheet import generate_12mo_plot
+
+intervals = [
+    "01mo",
+    "03mo",
+    "06mo",
+    "12mo",
+    "13moToMax",
+]
 
 
 def log_scale_slider(label, start, end, key=None):
@@ -65,14 +74,6 @@ def create_custom_df_column(unique_id):
         "BeforeToday",
     ]
 
-    interval = [
-        "01mo",
-        "03mo",
-        "06mo",
-        "12mo",
-        "13moToMax",
-    ]
-
     category = [
         "GainTotalPct",
         "GainAnnualizedPct",
@@ -91,7 +92,7 @@ def create_custom_df_column(unique_id):
     # Use the unique_id as part of the key for each widget
     with col1:
         selected_interval = st.selectbox(
-            "Time range:", interval, key=f"interval_{unique_id}"
+            "Time range:", intervals, key=f"interval_{unique_id}"
         )
     with col2:
         selected_era = st.selectbox("When:", era, key=f"era_{unique_id}")
@@ -104,24 +105,66 @@ def create_custom_df_column(unique_id):
     return f"{selected_category}_{selected_era}_{selected_interval}"
 
 
+def find_csvs_with_id(user_id):
+    # Define a unique key for storing the result based on the user_id
+    session_key = f"filtered_intervals_{user_id}"
+
+    # Check if the result is already memoized in st.session_state
+    if session_key in st.session_state:
+        return st.session_state[session_key]
+
+    filtered_intervals = []
+    for interval in intervals:
+        file_name = f"correlation_matrix_{interval}.csv"
+        if os.path.exists(file_name):
+            df = pd.read_csv(file_name)
+            # Assuming the first column should be renamed to "id"
+            df.rename(columns={df.columns[0]: "id"}, inplace=True)
+            if user_id in df.columns:
+                filtered_intervals.append(interval)
+
+    # Store the result in st.session_state before returning it
+    st.session_state[session_key] = filtered_intervals
+
+    return filtered_intervals
+
+
 ## PAGE STREAMLIT START ##
 def correlation_page():
+    st.write("## Note: This page is slow, due to extra compute... be patient...")
     st.write("## 1. Enter a known ID, and press ENTER:")
     user_algo_id = st.text_input("", "")
+    corr_df = None
 
-    corr_df = pd.read_csv("correlation_matrix.csv")
+    if not user_algo_id:  # Proceed only if the user has entered an ID
+        return
+
+    filtered_intervals = find_csvs_with_id(user_algo_id)
+    if not filtered_intervals:
+        st.write("No correlations for known time intervals")
+        return
+
+    # Step 4: User selects one of the filtered_intervals
+    st.write("## 2. Here are the known correlation intervals for this ID. Choose one:")
+    selected_interval = st.selectbox("", filtered_intervals)
+
+    # Load the corresponding CSV file
+    file_name = f"correlation_matrix_{selected_interval}.csv"
+    corr_df = pd.read_csv(file_name)
     corr_df.rename(columns={corr_df.columns[0]: "id"}, inplace=True)
     corr_df["id"] = corr_df["id"].astype(str)
 
-    # Check if the column exists
+    # Filter the DataFrame to keep only the "id" column and the column corresponding to the user_algo_id
     if user_algo_id in corr_df.columns:
-        # Keep only the 'id' column and the specified company_name column
         corr_df = corr_df[["id", user_algo_id]]
     else:
+        st.write(
+            "An error occurred. The selected time-interval does not contain the entered ID."
+        )
         return
 
     st.write(
-        "## 2. OPTIONAL: Filter down database (e.g.: only keep algos with high gains):"
+        "## 3. OPTIONAL: Filter down database (e.g.: only keep algos with high gains):"
     )
     # Load the DataFrame at the very start
     df = pd.read_csv("output.csv")
@@ -180,7 +223,7 @@ def correlation_page():
     df_filtered_rows[user_algo_id] = df_filtered_rows[user_algo_id].abs()
     sorted_df = df_filtered_rows.sort_values(by=user_algo_id, ascending=True)
 
-    st.write(f"## 3. Lowest correlation with {user_algo_id}")
+    st.write(f"## 4. Lowest correlation with {user_algo_id}")
     st.write("### Select one to plot:")
 
     # Configure the grid options
@@ -200,5 +243,5 @@ def correlation_page():
             + selected_symphony_id
             + "/factsheet"
         )
-        st.write(f"## 4. Return for prior 12 months ({selected_symphony_id}):")
+        st.write(f"## 5. Return for prior 12 months ({selected_symphony_id}):")
         generate_12mo_plot(selected_symphony_id)

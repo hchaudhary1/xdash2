@@ -107,7 +107,9 @@ def create_custom_df_column(unique_id):
 ## PAGE STREAMLIT START ##
 def simple_screener_page():
     # Load the DataFrame at the very start
-    df = pd.read_csv("output.csv")
+    if "_main_df" not in st.session_state:
+        st.session_state._main_df = pd.read_csv("output.csv")
+    df = st.session_state._main_df
 
     st.write("## 1. Choose your filters:")
 

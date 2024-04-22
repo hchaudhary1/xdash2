@@ -50,7 +50,7 @@ init_streamlit_comm()
 
 PAGES = {
     "Simple Selector": simple_screener_page,
-    "Advacned Explorer": data_explorer_page,
+    "Advanced Explorer": data_explorer_page,
     "Single ID QuantStat": single_tearsheet,
     "Correlation": correlation_page,
 }

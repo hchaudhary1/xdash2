@@ -18,6 +18,15 @@ era_prefixes = [
     "BeforeToday",
 ]
 
+era = [
+    (30, "01mo"),
+    (90, "03mo"),
+    (180, "06mo"),
+    (365, "12mo"),
+]
+period_final = "13moToMax"
+delta_days_13mo = 395
+
 DATE_1990 = "1990-01-01"  # 11110
 DATE_TODAY = datetime.date.today()
 DATE_TWO_WEEKS_AGO = (datetime.date.today() - datetime.timedelta(weeks=2)).strftime(
@@ -73,7 +82,7 @@ def ensure_folder_exists(folder_name):
                 os.makedirs(folder_name)
 
 
-def single_backtest(symph_id, start_date, end_date, max_retries=3, use_stored=True):
+def single_backtest(symph_id, start_date, end_date, max_retries=1, use_stored=True):
     if isinstance(start_date, str):
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     if isinstance(end_date, str):
@@ -144,7 +153,7 @@ def single_backtest(symph_id, start_date, end_date, max_retries=3, use_stored=Tr
     return None
 
 
-def get_live_start_date(symphony_id, max_retries=3, retry_delay=2):
+def get_live_start_date(symphony_id, max_retries=1, retry_delay=2):
     # Get today's date in YYYY-MM-DD format
     # Define the file and folder names based on the symphony_id and today's date
     today = DATE_TODAY.strftime("%Y-%m-%d")
@@ -228,7 +237,7 @@ def get_symphony_list(file_path):
     with open(file_path, newline="") as csvfile:
         reader = csv.reader(csvfile)
         next(reader)  # Skip the header row
-        return [row[1] for row in reader if row]  # Added check to skip empty rows
+        return [row[0] for row in reader if row]  # Added check to skip empty rows
 
 
 def download_multiple_backtests(symphony_ids, start_date, end_date):
@@ -311,6 +320,9 @@ def latest_market_day_int():
 
 def find_min_date_int(sym_id):
     full_curve = single_backtest(sym_id, DATE_1990, DATE_TODAY.strftime("%Y-%m-%d"))
+    if full_curve is None:
+        v_print(f"No data returned for symphony ID {sym_id}")
+        return None
     curve = dict(sorted(full_curve["dvm_capital"][sym_id].items()))
     min_date = list(curve.keys())[0]
     max_date = list(curve.keys())[-1]
@@ -323,16 +335,16 @@ def find_min_date_int(sym_id):
 
 
 def get_symph_dates():
-    symphony_ids = get_symphony_list("2024-feb-25.csv")
+    symphony_ids = get_symphony_list("aa_total_symphs.csv")
     df = pd.DataFrame(symphony_ids, columns=["id"])
 
     df.loc[:, "algo_size"] = None
     df.loc[:, "algo_start_date"] = None
     df.loc[:, "algo_live_date"] = None
 
-    df = df.head(100)
+    # df = df.head(100)
 
-    def process_row(row):
+    def process_row1(row):
         symphony_id = row.id
         live_start_date = get_live_start_date(symphony_id)
         if live_start_date is None:
@@ -350,7 +362,7 @@ def get_symph_dates():
 
     with ThreadPoolExecutor() as executor:
         for index, row in enumerate(
-            executor.map(process_row, df.itertuples(index=False))
+            executor.map(process_row1, df.itertuples(index=False))
         ):
             if row is not None:
                 df.at[index, "algo_size"] = row["algo_size"]
@@ -399,15 +411,6 @@ def get_era_dates(era, data_begin, live_date, delta_days, isBeyondDelta=False):
 
 def process_row(row):
 
-    era = [
-        (30, "01mo"),
-        (90, "03mo"),
-        (180, "06mo"),
-        (365, "12mo"),
-    ]
-    period_final = "13moToMax"
-    delta_days_13mo = 395
-
     stat_types = {
         "GainTotalPct": ("cumulative_return", 0, 100),
         "GainAnnualizedPct": ("annualized_rate_of_return", 0, 100),
@@ -441,10 +444,14 @@ def process_row(row):
                 era_prefix, start_date, live_date, delta_days_13mo, True
             )
             if bt_start is not None and bt_end is not None:
-                json = single_backtest(row["id"], bt_start, bt_end)
-                results[results_key] = (
-                    json["stats"].get(stat_json_name, default_value) * multiplier
-                )
+                json_result = single_backtest(row["id"], bt_start, bt_end)
+                if json_result is not None:  # Check if json_result is not None
+                    results[results_key] = (
+                        json_result["stats"].get(stat_json_name, default_value)
+                        * multiplier
+                    )
+                else:
+                    results[results_key] = None  # Or handle the None case appropriately
 
             # get stats for rest of the eras
             for days, description in era:
@@ -454,10 +461,16 @@ def process_row(row):
                     era_prefix, start_date, live_date, days
                 )
                 if bt_start is not None and bt_end is not None:
-                    json = single_backtest(row["id"], bt_start, bt_end)
-                    results[results_key] = (
-                        json["stats"].get(stat_json_name, default_value) * multiplier
-                    )
+                    json_result = single_backtest(row["id"], bt_start, bt_end)
+                    if json_result is not None:  # Check if json_result is not None
+                        results[results_key] = (
+                            json_result["stats"].get(stat_json_name, default_value)
+                            * multiplier
+                        )
+                    else:
+                        results[results_key] = (
+                            None  # Or handle the None case appropriately
+                        )
 
     return results
 
@@ -484,10 +497,16 @@ def before_live(df):
                 df.at[row_index, column_key] = value
 
 
-def read_12mo_curve(symphony_id, data_start):
+def decode_era(era_str):
+    for days, string in era:
+        if string == era_str:
+            return days
+    return None
+
+
+def read_curve(symphony_id, data_start, bt_start):
     if isinstance(data_start, str):
         data_start = pd.to_datetime(data_start)
-    bt_start = DATE_TODAY - datetime.timedelta(days=365)
     if bt_start < data_start:
         return None
     backtest = single_backtest(
@@ -501,19 +520,26 @@ def read_12mo_curve(symphony_id, data_start):
     return np.array(values)
 
 
-def get_corr(df):
+def get_corr(df, the_era):
     v_print("getting data for corr")
+    days = decode_era(the_era)
+    if not days:
+        return
     all_curves = {}
     for _, row in df.iterrows():
-        curve = read_12mo_curve(row["id"], row["algo_start_date"])
+        curve = read_curve(
+            row["id"],
+            row["algo_start_date"],
+            DATE_TODAY - datetime.timedelta(days=days),
+        )
         if curve is not None:
             all_curves[row["id"]] = curve
 
     all_curves_df = pd.DataFrame(all_curves)
-    v_print("computing corr")
+    v_print(f"computing corr for {the_era}")
     correlation_matrix = all_curves_df.corr()
     v_print("compute corr done - saving to csv")
-    correlation_matrix.to_csv("correlation_matrix.csv", index=True)
+    correlation_matrix.to_csv(f"correlation_matrix_{the_era}.csv", index=True)
     v_print("CSV done")
 
 
@@ -530,8 +556,8 @@ def main():
     print(df.tail(10))
 
     #############################
-
-    get_corr(df)
+    for _, string in era:
+        get_corr(df, string)
 
 
 # before live
